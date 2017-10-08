@@ -1,3 +1,5 @@
+BOT UNDER MODIFICATION, FORKED FROM geekbeard/ServerStatsBot
+
 # Server Manager Bot
 
 A Telegram Bot:
