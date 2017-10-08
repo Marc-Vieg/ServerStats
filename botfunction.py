@@ -29,12 +29,6 @@ stopmarkup = {'keyboard': [['Stop']]}
 
 mainKeyboard = MyGlobals.mainKeyboard
 
-oldKeyboard = ReplyKeyboardMarkup(keyboard=[
-                     ['/stats', '/memgraph'],
-                     ['/logwatch', '/service'],
-                     ['/fortune', '/who', '/surveille'],
-                     ['/setcpu', '/setpoll', '/setmem']])
-
 hide_keyboard = {'hide_keyboard': True}
 
 
@@ -65,13 +59,6 @@ class YourBot(telepot.Bot):
         # Do your stuff according to `content_type` ...
         print(("Your chat_id:" + str(chat_id) + "chat_type : " + str(chat_type)))  # this will tell you your chat_id
         if chat_id in adminchatid:  # Store adminchatid variable in tokens.py
-            #TORRENT Part 1
-            #Getting torrent file and asking the keyword to use for save location
-            if content_type == 'document':
-                print("j entre dans torrent.main()")
-                torrents.main(bot, TOKEN, chat_id, msg)
-                #MyGlobals.settorrenttype.append(chat_id)
-
             #Text messages
             if content_type == 'text':
                 if msg['text'] == '<- RETOUR':
@@ -81,13 +68,6 @@ class YourBot(telepot.Bot):
                         settings.main(bot, TOKEN, chat_id, msg)
                 elif (msg['text']=='Others') or (MyGlobals.currentMenu == 'Others'):
                     othersmenu.main(bot, chat_id, msg)
-                elif chat_id in MyGlobals.settorrenttype:
-                    #get keyword previously asked
-                    aTyper[1] = msg['text']
-                    #print("j entre dans torrent.move()")
-                    torrents.move(motscle, aTyper, bot, chat_id)
-                    #on nettoie l'admichatid
-                    clearall(chat_id)
                 elif (msg['text'] == "Utils") or (MyGlobals.currentMenu == 'Utils'):
                     botutils.main(bot, TOKEN, chat_id, msg)
                 elif msg['text']=='FLUSH':
@@ -152,7 +132,6 @@ def main():
     else:
         for adminid in adminchatid:
             bot.sendMessage(adminid, "erreur de chargement du dataset")
-    #MyGlobals.LISTSMAX = 1
     MyGlobals.currentMenu = 'Main'
     for adminid in adminchatid:
         bot.sendMessage(adminid, "Demarrage de Main", reply_markup=mainKeyboard)
