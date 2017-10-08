@@ -4,23 +4,48 @@ BOT UNDER MODIFICATION, FORKED FROM geekbeard/ServerStatsBot
 
 A Telegram Bot:
 
-* Commands
-    * `/stats` - gives summed statistics about memory \ disk \ processes (will improve)
-    * `/shell` - goes into the mode of executing shell commands & sends you the output
-    * `/memgraph` - plots a graph of memory usage for a past period and sends you a picture of the graph
-    * `/setmem` - set memory threshold (%) to monitor and notify if memory usage goes above it
-    * `/setpoll` - set polling interval in seconds (higher than 10)
-* Monitors memory usage and if it reaches above the set threshold = sends you warning message
+* Menus :
+   primary menu : Utils, Settings, Others
+   
+   * Utils :
+   
+      `Stats` -  gives summed statistics about memory and cpu usage \ disk \ processes (will improve)
+      
+      `BigGraph` - plots a graph of memory, temperatures, and cpu usage from the timeperiod specified in Settings/nd d heures graphique (yeah, some strings are in french, I'll translate strings
+      
+      `Temp` - Get Cores temperature (you have to specify the number of cores you have in botglobalvars.py
+      
+      `Raid Status` - cat /proc/mdstat for who have software raid
+      
+      `Ip` - curl ifconfig.me to get your public IP
+      
+      
+   * Settings : 
+      `/setmem` - set memory threshold (%) to monitor and notify if memory usage goes above it
+      
+      `/setpoll` - set polling interval in seconds (higher than 10)
+      
+      `/setcpu` - set cppu threshold (%) to monitor and notify if cpu usage goes above it
+      
+      `Surveille` - Toggle active surveillance, in other word would you like to send every x second a graph
+      
+      `nd d heures graphique` - toggle the number of past hours to include in yout graphs
+      
+      
+   * Others
+      `Compile LineageOs` - I use it to toggle my buildscript for my lineageos Rom
+      
+      `Status` - only cat the logfile of my buildscript to know what it is doing
+      
+      `Restart Bot` - Restart bot with your personnal start|stop script
+      
+
 
 
 Example summary: [Gif](http://i.imgur.com/AhCvy9W.gifv)
 
 ![Bot](http://i.imgur.com/hXT0drx.png)
 
-
-Example shell command output as a message from the bot: 
-
-![Shell](https://i.imgur.com/PtvcaSD.png)
 
 
 Example graph sent by bot: [Gif](http://i.imgur.com/anX7rJR.gifv)
@@ -77,9 +102,7 @@ I will reimplement this differently later.
         
  
 # PLEASE CONTRIBUTE :)
- I threw this code together within 10 minutes or so as a mockup to work on it later. But I think it's a nice bot idea and some of you guys might like this too. So please feel free to fork, pull, requests features!
- Can give contributors access!
- Would really love to see this bot grow some fat and brain:)
+I got the original code from geekbeard/ServerStatsBot and adpted it to my personnal usage, please feel free to thank him and fork your own version !
  
  
 # Other bot development
@@ -88,4 +111,4 @@ I will reimplement this differently later.
 [http://alfredthebot.com](http://alfredthebot.com)
  
  
- GB
+ CG
