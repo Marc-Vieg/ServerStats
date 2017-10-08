@@ -16,28 +16,6 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['Raid status', 'IP'],
     ['<- RETOUR']])
 
-#def graphTimePeriod():
-    #maxpoll = len(MyGlobals.Datas['timing'])
-    ##tmperiod = "Last %.2f hours" % ((datetime.now() - MyGlobals.graphstart).total_seconds() / 3600)
-    #i=maxpoll
-    #j=timeneeded
-    #while i>0:
-        #time+=MyGlobals.Datas['timing'][i]
-        #if time < timeneeded:
-            #timelist[j] = MyGlobals.Datas['timing'][i]
-            #i -= 1
-            #j += 1
-        #elif i==0:
-            #print("pas assez de donnees")
-            #return timelist
-        #else :
-            #break;
-
-
-
-
-
-
 def raidstatus():
     p = Popen('cat /proc/mdstat | grep md', shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
     output = str(p.stdout.read())
@@ -76,7 +54,7 @@ def plotbiggraph(Datas, xaxis, tmperiod):
         memthresholdarr.append(MyGlobals.memorythreshold)
     for xas in xaxis:
         usagethresholdarr.append(MyGlobals.usagethreshold)
-    #plt.plot(xaxis, Datas['mem'], 'b-', xaxis, memthresholdarr, 'b--', xaxis, Datas['cpu'], 'r-', xaxis, usagethresholdarr, 'r--')
+    plt.plot( xaxis, memthresholdarr, 'g--', xaxis, usagethresholdarr, 'b--')
     #mem
     Datas['mem'][0] = 0
     plt.plot(xaxis, Datas['mem'], 'g-', label=u"mem")
@@ -157,8 +135,6 @@ def stats(bot, chat_id):
             pidsreply + "\n " + \
             cpusreply + "\n\n"
     bot.sendMessage(chat_id, reply, disable_web_page_preview=True)
-#clearing chatid, no more set someting
-
 
 def recupTemp():
 #get temperatures from psutil, and retrun temeratures[]
@@ -171,19 +147,15 @@ def recupTemp():
     for labelneeded in MyGlobals.myCores:
         while testlabel != labelneeded:
             index = sensors_coretemp.find(labelneeded)
-            #index += (len(labelneeded) - 1)
             tempString = sensors_coretemp
             tmp = tempString[index:]
             tmp = tempString.split("'")
             for testlabel in tmp:
-                #print(testlabel)
                 if testlabel == labelneeded:
-                    #print("Coeur voulu trouve !!!")
                     tmpp = str(tmp)
                     indext = tmpp.find('current=')
                     indext += 8
                     tmpp = tmpp[indext:]
-                    #print(tmpp.split('.')[0])
                     temperatures[testlabel] = int(tmpp.split('.')[0])
                     break;
     return temperatures
