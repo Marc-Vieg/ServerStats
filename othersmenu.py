@@ -14,31 +14,12 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['<- RETOUR']])
 
 def compile(bot, chat_id):
-    #compuid = 1003
     buildScript = dict()
     buildScript['path'] = '/home/build/buildScript'
     buildScript['name'] = 'buildscript.sh'
     command_line = str("sudo -i -u build . " + buildScript['path'] + "/" + buildScript['name'] + " > /tmp/lastCompilation.log")
-    #args = shlex.split(command_line)
-    #comppid = os.fork()
-    #if comppid:
-    #print ("i am children ! \n PID %d\nrunning compilation before closing ;)" % comppid)
-    #os.setgid(1003)
-    #os.setuid(1003)
-    #print("child my userid :: " + str(os.getuid()))
     p = Popen(command_line, shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
-    #p.wait()
-    #output = str(p.stdout.read())
-    #log = open("/tmp/lastCompilation.log", "w")
-    #log.write(str(output))
-    #log.close()
-    #f = open('/tmp/lastCompilation.log', 'rb')
-    #bot.sendDocument(chat_id, f)
-    #p = Popen("kill " + str(comppid), shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
-
-    #else:
-        #print("i am fatcher, i ll continue my job !")
-
+    
 #cpu usage alert
 def restartBot(bot, chat_id, msg):
     MyGlobals.currentMenu = 'Restarting'
@@ -54,8 +35,7 @@ def restartBot(bot, chat_id, msg):
     else:
         print("i am fatcher, retiring..")
         os._exit(0)
-    #raise SystemExit
-
+    
 def compilStatus(bot, chat_id):
     command_line = str("tail -n5 /tmp/lastCompilation.log")
     p = Popen(command_line, shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
