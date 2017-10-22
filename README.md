@@ -13,9 +13,13 @@ A Telegram Bot:
       
       `BigGraph` - plots a graph of memory, temperatures, and cpu usage from the timeperiod specified in Settings/nd d heures graphique (yeah, some strings are in french, I'll translate strings
       
-      `Temp` - Get Cores temperature (you have to specify the number of cores you have in botglobalvars.py
+      `logwatch` send logwatch output line by line (telegram limits to 400 chars
       
-      `Raid Status` - cat /proc/mdstat for who have software raid
+      `temp` - Get Cores temperature (you have to specify the number of cores you have in botglobalvars.py
+      
+      `Raid` - cat /proc/mdstat for who have software raid
+      
+      `Disks` - get disks usages
       
       `Ip` - curl ifconfig.me to get your public IP
       
@@ -27,7 +31,7 @@ A Telegram Bot:
       
       `/setcpu` - set cppu threshold (%) to monitor and notify if cpu usage goes above it
       
-      `Surveille` - Toggle active surveillance, in other word would you like to send every x second a graph
+      `Alerts On/Off` - Toggle if alerts will be sent when memeory or cpu usage % is bigger than threshold (on by default)
       
       `nd d heures graphique` - toggle the number of past hours to include in yout graphs
       
