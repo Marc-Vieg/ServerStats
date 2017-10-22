@@ -2,12 +2,14 @@
 import json
 from botglobalvars import MyGlobals
 
+
 def save():
     with open('botDatas.json', 'w') as f:
         try:
             json.dump(MyGlobals.Datas, f)
         except:
             print("erreur d ecriture de la db")
+
 
 def Charges():
     global Datas

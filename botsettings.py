@@ -1,12 +1,15 @@
-# coding=<UTF-8>
+# -*- coding: utf-8 -*-
 from telepot.namedtuple import ReplyKeyboardMarkup
 from botglobalvars import MyGlobals
 
-submenus = ['settinghoursth', 'setmem', 'settingmemth', 'setcpu', 'settingcputh', 'setpoll', 'settingpollth']
+submenus = ['settinghoursth', 'setmem',
+            'settingmemth', 'setcpu',
+            'settingcputh', 'setpoll',
+            'settingpollth']
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
-    ['setmem','setcpu'],
-    ['setpoll', 'Surveille'],
+    ['setmem', 'setcpu'],
+    ['setpoll', 'Alerts On/Off'],
     ['nb d heures graphique'],
     ['<- RETOUR']])
 
@@ -25,10 +28,14 @@ sethoursKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['12', '24'],
     ['Cancel']])
 
+
 def setgraphichours(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.currentMenu = 'settinghoursth'
-    bot.sendMessage(chat_id, "combien d'heures a afficher dans le graphique ?", reply_markup=sethoursKeyboard)
+    bot.sendMessage(chat_id,
+                    "combien d'heures a afficher dans le graphique ?",
+                    reply_markup=sethoursKeyboard)
+
 
 def settinggraphichours(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
@@ -42,17 +49,20 @@ def settinggraphichours(bot, chat_id, msg):
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
-                1/0
+                1 / 0
         except:
-            bot.sendMessage(chat_id, "Please send a proper numeric value below 49 hours")
-
+            bot.sendMessage(chat_id,
+                            "Please send a proper numeric value below 49 hours")
 
 
 def setmem(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.settingmemth.append(chat_id)
-    bot.sendMessage(chat_id, "Send me a new memory threshold to monitor?", reply_markup=setKeyboard)
+    bot.sendMessage(chat_id,
+                    "Send me a new memory threshold to monitor?",
+                    reply_markup=setKeyboard)
     MyGlobals.currentMenu = 'settingmemth'
+
 
 def settingmemth(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
@@ -66,16 +76,20 @@ def settingmemth(bot, chat_id, msg):
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
-                1/0
+                1 / 0
         except:
-            bot.sendMessage(chat_id, "Please send a proper numeric value below 100.")
+            bot.sendMessage(chat_id,
+                            "Please send a proper numeric value below 100.")
 
 
 #cpu usage alert
 def setcpu(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.currentMenu = 'settingcputh'
-    bot.sendMessage(chat_id, "Send me a new cpu usage threshold to monitor?", reply_markup=setKeyboard)
+    bot.sendMessage(chat_id,
+                    "Send me a new cpu usage threshold to monitor?",
+                    reply_markup=setKeyboard)
+
 
 def settingcputh(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
@@ -89,14 +103,19 @@ def settingcputh(bot, chat_id, msg):
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
-                1/0
+                1 / 0
         except:
-            bot.sendMessage(chat_id, "Please send a proper numeric value below 100.")
+            bot.sendMessage(chat_id,
+                            "Please send a proper numeric value below 100.")
+
 
 def setpoll(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.currentMenu = 'settingpollth'
-    bot.sendMessage(chat_id, "Send me a new polling interval in seconds? (higher than 10)", reply_markup=setPollKeyboard)
+    bot.sendMessage(chat_id,
+                    "Send me a new polling interval in seconds? " +
+                    "(higher than 10)", reply_markup=setPollKeyboard)
+
 
 def settingpollth(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
@@ -110,26 +129,32 @@ def settingpollth(bot, chat_id, msg):
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
-                1/0
+                1 / 0
         except:
-            bot.sendMessage(chat_id, "Please send a proper numeric value higher than 10.")
+            bot.sendMessage(chat_id,
+                            "Please send a proper numeric value "
+                            + "higher than 10.")
 
 
-def activeSurv(bot, chat_id):
+def Alerts(bot, chat_id):
     bot.sendChatAction(chat_id, 'typing')
-    MyGlobals.surveillanceActive = not MyGlobals.surveillanceActive
-    if MyGlobals.surveillanceActive:
-        bot.sendMessage(chat_id, "Je vais t'envoyer des rapports toutes les " + str(MyGlobals.poll) + " secondes", disable_web_page_preview=True)
+    MyGlobals.alertsEnlabed = not MyGlobals.alertsEnlabed
+    if MyGlobals.alertsEnlabed:
+        bot.sendMessage(chat_id,
+                        "Les alertes sont Activees",
+                         disable_web_page_preview=True)
     else:
-        bot.sendMessage(chat_id, "Surveillance active desactivee", disable_web_page_preview=True)
-
-
+        bot.sendMessage(chat_id,
+                        "Les alertes sont desactivees",
+                        disable_web_page_preview=True)
 
 
 def main(bot, TOKEN, chat_id, msg):
-    print(str ("je suis dans " + __name__))
-    if msg['text']=='Settings':
-        bot.sendMessage(chat_id, str("Bienvenue dans les parametres du bot"), reply_markup=myKeyboard)
+    print((str("je suis dans " + __name__)))
+    if msg['text'] == 'Settings':
+        bot.sendMessage(chat_id,
+                        str("Bienvenue dans les parametres du bot"),
+                        reply_markup=myKeyboard)
         MyGlobals.currentMenu = 'Settings'
     elif msg['text'] == 'setmem':
         setmem(bot, chat_id, msg)
@@ -137,19 +162,22 @@ def main(bot, TOKEN, chat_id, msg):
         settingmemth(bot, chat_id, msg)
     elif msg['text'] == "setcpu" and MyGlobals.currentMenu == 'Settings':
         setcpu(bot, chat_id, msg)
-    elif MyGlobals.currentMenu=='settingcputh':
+    elif MyGlobals.currentMenu == 'settingcputh':
         settingcputh(bot, chat_id, msg)
     #set graph interval
     elif msg['text'] == 'setpoll' and MyGlobals.currentMenu == 'Settings':
         setpoll(bot, chat_id, msg)
-    elif MyGlobals.currentMenu =='settingpollth':
+    elif MyGlobals.currentMenu == 'settingpollth':
         settingpollth(bot, chat_id, msg)
-    elif msg['text'] == 'nb d heures graphique'and MyGlobals.currentMenu == 'Settings':
+    elif (msg['text'] == 'nb d heures graphique'
+          and MyGlobals.currentMenu == 'Settings'):
         setgraphichours(bot, chat_id, msg)
-    elif MyGlobals.currentMenu =='settinghoursth':
+    elif MyGlobals.currentMenu == 'settinghoursth':
         settinggraphichours(bot, chat_id, msg)
-    elif msg['text'] == 'Surveille':
-        activeSurv(bot, chat_id)
-    elif msg['text']=='<- RETOUR':
+    elif msg['text'] == 'Alerts On/Off':
+        Alerts(bot, chat_id)
+    elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
-        bot.sendMessage(chat_id, "retour au menu principal", reply_markup=MyGlobals.mainKeyboard)
+        bot.sendMessage(chat_id,
+                        "retour au menu principal",
+                        reply_markup=MyGlobals.mainKeyboard)
