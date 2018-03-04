@@ -233,10 +233,11 @@ def bytes2human(n):
     return "%sB" % n
 
 
-def speedtest():
+def speedtest(bot, chat_id):
+    bot.sendChatAction(chat_id, 'typing')
     st = pyspeedtest.SpeedTest()
-    up = round(st.upload()/8/1024/1024)
-    down = round(st.download()/8/1024/1024)
+    up = bytes2human(round(st.upload()/8))
+    down = bytes2human(round(st.download()/8))
     ping = round(st.ping())
     return str("Up : " + str(up) +"\nDown : "+ str(down) + "\nPing : " + str(ping))
 
@@ -262,7 +263,7 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
     elif msg['text'] == 'speedtest':
-        bot.sendMessage(chat_id, speedtest(), reply_markup=myKeyboard)
+        bot.sendMessage(chat_id, speedtest(bot, chat_id), reply_markup=myKeyboard)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id, "retour au menu principal",
