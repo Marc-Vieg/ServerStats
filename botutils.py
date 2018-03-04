@@ -9,9 +9,10 @@ from datetime import timedelta
 from telepot.namedtuple import ReplyKeyboardMarkup
 from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
+import pyspeedtest
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
-    ['stats', 'temp'],
+    ['stats', 'temp', 'speedtest'],
     ['Big Graph', 'logwatch'],
     ['Raid', 'Disks', 'IP'],
     ['<- RETOUR']])
@@ -196,6 +197,7 @@ def getip(bot, chat_id):
     p = Popen('curl ifconfig.me', shell=True,
                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
     output = p.stdout.read()
+    output = output[:-1]
     bot.sendMessage(chat_id, str("Mon IP publique actuelle : "
                     + str(output)), reply_markup=myKeyboard)
 
@@ -231,6 +233,14 @@ def bytes2human(n):
     return "%sB" % n
 
 
+def speedtest():
+    st = pyspeedtest.SpeedTest()
+    up = round(st.upload()/8/1024/1024)
+    down = round(st.download()/8/1024/1024)
+    ping = round(st.ping())
+    return str("Up : " + str(up) +"\nDown : "+ str(down) + "\nPing : " + str(ping))
+
+
 def main(bot, TOKEN, chat_id, msg):
     print((str("je suis dans " + __name__)))
     MyGlobals.currentMenu = 'Utils'
@@ -251,7 +261,10 @@ def main(bot, TOKEN, chat_id, msg):
         bot.sendMessage(chat_id, raidstatus(), reply_markup=myKeyboard)
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
+    elif msg['text'] == 'speedtest':
+        bot.sendMessage(chat_id, speedtest(), reply_markup=myKeyboard)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id, "retour au menu principal",
                         reply_markup=MyGlobals.mainKeyboard)
+
