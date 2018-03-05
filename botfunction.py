@@ -11,13 +11,14 @@ import collections
 import time
 import telepot
 import botpersist as persist
+import botDatas
 
 
 def FlushData(bot, chat_id):
-    MyGlobals.Datas['timing'] = []
-    MyGlobals.Datas['cpu'] = []
-    MyGlobals.Datas['mem'] = []
-    MyGlobals.Datas['temp'] = []
+    botDatas.Datas['timing'] = []
+    botDatas.Datas['cpu'] = []
+    botDatas.Datas['mem'] = []
+    botDatas.Datas['temp'] = []
     bot.sendMessage(chat_id, "datas nettoyées")
 
 
@@ -106,19 +107,19 @@ bot.message_loop()
 
 
 def main():
-    if persist.Charges():
+    if botDatas.charges():
         for adminid in adminchatid:
             bot.sendMessage(adminid, "dataset Chargé !")
         print("dataset chargé")
         print("controle : \n timing : "
-              + str(len(MyGlobals.Datas['timing']))
+              + str(len(botDatas.Datas['timing']))
               + "\n cpu : "
-              + str(len(MyGlobals.Datas['cpu'])))
+              + str(len(botDatas.Datas['cpu'])))
         print("\n mem : "
-              + str(len(MyGlobals.Datas['mem']))
+              + str(len(botDatas.Datas['mem']))
               + "\n temp : "
-              + str(len(MyGlobals.Datas['temp'])))
-        print(str(MyGlobals.Datas))
+              + str(len(botDatas.Datas['temp'])))
+        #print(str(botDatas.Datas))
 
     else:
         for adminid in adminchatid:
@@ -127,60 +128,30 @@ def main():
     for adminid in adminchatid:
         bot.sendMessage(adminid, "Demarrage de Main", reply_markup=mainKeyboard)
     tr = 0
-    xx = 0
-    xxx = 0
-    xxtemp = 0
+    #xx = 0
+    #xxx = 0
+    #xxtemp = 0
     # Keep the program running.
     while 1:
         if tr == MyGlobals.poll:
-            if len(MyGlobals.Datas['timing']) > MyGlobals.LISTSMAX:
-                pollq = collections.deque(MyGlobals.Datas['timing'])
-                pollq.append(MyGlobals.poll)
-                pollq.popleft()
-                MyGlobals.Datas['timing'] = pollq
-                MyGlobals.Datas['timing'] = list(MyGlobals.Datas['timing'])
-            else:
-                MyGlobals.Datas['timing'].append(MyGlobals.poll)
-            #send graph if autosend
-            if MyGlobals.surveillanceActive:
-                for adminid in adminchatid:
-                    bot.sendChatAction(adminid, 'typing')
-                    tmperiod = "Last %.2f hours"\
-                               % ((datetime.now()
-                               - MyGlobals.graphstart).total_seconds() / 3600)
-                    bot.sendPhoto(adminid,
-                        botutils.plotbiggraph(MyGlobals.Datas,
-                                              MyGlobals.xaxis, tmperiod))
-                    bot.sendMessage(adminid,
-                                    "rapport de surveillance toutes les "
-                                    + str(MyGlobals.poll) + " secondes")
+            #if MyGlobals.surveillanceActive:
+                #for adminid in adminchatid:
+                    #bot.sendChatAction(adminid, 'typing')
+                    #tmperiod = "Last %.2f hours"\
+                               #% ((datetime.now()
+                               #- MyGlobals.graphstart).total_seconds() / 3600)
+                    #bot.sendPhoto(adminid,
+                        #botutils.plotbiggraph(botDatas.Datas,
+                                              #MyGlobals.xaxis, tmperiod))
+                    #bot.sendMessage(adminid,
+                                    #"rapport de surveillance toutes les "
+                                    #+ str(MyGlobals.poll) + " secondes")
             tr = 0
             memck = psutil.virtual_memory()
             mempercent = memck.percent
             usagepercent = psutil.cpu_percent(0.5)
-            #on entretiens la liste des memoires
-            if len(MyGlobals.Datas['mem']) > MyGlobals.LISTSMAX:
-                memq = collections.deque(MyGlobals.Datas['mem'])
-                memq.append(mempercent)
-                memq.popleft()
-                MyGlobals.Datas['mem'] = memq
-                MyGlobals.Datas['mem'] = list(MyGlobals.Datas['mem'])
-            else:
-                MyGlobals.xaxis.append(xx)
-                xx += 1
-                MyGlobals.Datas['mem'].append(mempercent)
+
             #on entretiens la liste des utilisations proc
-            if len(MyGlobals.Datas['cpu']) > MyGlobals.LISTSMAX:
-                usageq = collections.deque(MyGlobals.Datas['cpu'])
-                usageq.append(usagepercent)
-                usageq.popleft()
-                MyGlobals.Datas['cpu'] = usageq
-                MyGlobals.Datas['cpu'] = list(MyGlobals.Datas['cpu'])
-            else:
-                MyGlobals.xaxiscpu.append(xxx)
-                xxx += 1
-                MyGlobals.Datas['cpu'].append(usagepercent)
-            #on entretiens la liste des temperatures
             temperatures = botutils.recupTemp()
             z = 0
             somme = 0
@@ -188,58 +159,49 @@ def main():
                 z += 1
                 somme += temperatures[core]
             tempMoyenne = somme / z
-            #print("temp moyenne : %d" % tempMoyenne)
-            if len(MyGlobals.Datas['temp']) > MyGlobals.LISTSMAX:
-                tempq = collections.deque(MyGlobals.Datas['temp'])
-                tempq.append(tempMoyenne)
-                tempq.popleft()
-                MyGlobals.Datas['temp'] = tempq
-                MyGlobals.Datas['temp'] = list(MyGlobals.Datas['temp'])
-            else:
-                MyGlobals.xaxistemp.append(xxx)
-                xxtemp += 1
-                MyGlobals.Datas['temp'].append(tempMoyenne)
-            #alerte si memoire faible
-            if (mempercent > MyGlobals.memorythreshold
-                and MyGlobals.alertsEnlabed is True):
-                memavail = "Available memory: %.2f GB" \
-                           % (memck.available / 1000000000)
-                timep = 0
-                for i in range(0, len(MyGlobals.Datas['timing'])):
-                    timep += MyGlobals.Datas['timing'][i]
-                if timep < 60:
-                    tmperiod = " last %d secondes" % time
-                if timep >= 60 and timep < 3600:
-                    tmperiod = " last %d minutes" % (time / 60)
-                if timep >= 3600:
-                    tmperiod = " last " + str(MyGlobals.GraphicHours)\
-                             + " hours"
-                for adminid in adminchatid:
-                    bot.sendMessage(adminid, "CRITICAL! LOW MEMORY!\n"
-                                    + memavail + '\n' + str(mempercent)
-                                    + '% of memory used')
-                    bot.sendPhoto(adminid,
-                        botutils.plotbiggraph(MyGlobals.Datas,
-                                              MyGlobals.xaxis, tmperiod))
-            #alerte si proc surchargé
-            if (usagepercent > MyGlobals.usagethreshold
-                and MyGlobals.alertsEnlabed is True):
-                timep = 0
-                for i in range(0, len(MyGlobals.Datas['timing'])):
-                    timep += MyGlobals.Datas['timing'][i]
-                if timep < 60:
-                    tmperiod = " last %d secondes" % timep
-                if timep >= 60 and timep < 3600:
-                    tmperiod = " last %d minutes" % (timep / 60)
-                if timep >= 3600:
-                    tmperiod = " last " + str(MyGlobals.GraphicHours) + " hours"
-                for adminid in adminchatid:
-                    bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
-                                    + str(usagepercent) + '% of cpu used')
-                    bot.sendPhoto(adminid,
-                            botutils.plotbiggraph(MyGlobals.Datas,
-                                                  MyGlobals.xaxis,
-                                                  tmperiod))
-        persist.save()
+            botDatas.appendData(usagepercent, mempercent, tempMoyenne)
+
+            ##alerte si memoire faible
+            #if (mempercent > MyGlobals.memorythreshold
+                #and MyGlobals.alertsEnlabed is True):
+                #memavail = "Available memory: %.2f GB" \
+                           #% (memck.available / 1000000000)
+                #timep = 0
+                #for i in range(0, len(botDatas.Datas['timing'])):
+                    #timep += botDatas.Datas['timing'][i]
+                #if timep < 60:
+                    #tmperiod = " last %d secondes" % time
+                #if timep >= 60 and timep < 3600:
+                    #tmperiod = " last %d minutes" % (time / 60)
+                #if timep >= 3600:
+                    #tmperiod = " last " + str(MyGlobals.GraphicHours)\
+                             #+ " hours"
+                #for adminid in adminchatid:
+                    #bot.sendMessage(adminid, "CRITICAL! LOW MEMORY!\n"
+                                    #+ memavail + '\n' + str(mempercent)
+                                    #+ '% of memory used')
+                    #bot.sendPhoto(adminid,
+                        #botutils.plotbiggraph(botDatas.Datas,
+                                              #MyGlobals.xaxis, tmperiod))
+            ##alerte si proc surchargé
+            #if (usagepercent > MyGlobals.usagethreshold
+                #and MyGlobals.alertsEnlabed is True):
+                #timep = 0
+                #for i in range(0, len(botDatas.Datas['timing'])):
+                    #timep += botDatas.Datas['timing'][i]
+                #if timep < 60:
+                    #tmperiod = " last %d secondes" % timep
+                #if timep >= 60 and timep < 3600:
+                    #tmperiod = " last %d minutes" % (timep / 60)
+                #if timep >= 3600:
+                    #tmperiod = " last " + str(MyGlobals.GraphicHours) + " hours"
+                #for adminid in adminchatid:
+                    #bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
+                                    #+ str(usagepercent) + '% of cpu used')
+                    #bot.sendPhoto(adminid,
+                            #botutils.plotbiggraph(botDatas.Datas,
+                                                  #MyGlobals.xaxis,
+                                                  #tmperiod))
+        botDatas.save()
         time.sleep(10)  # 10 seconds
         tr += 10

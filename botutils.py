@@ -9,6 +9,7 @@ from datetime import timedelta
 from telepot.namedtuple import ReplyKeyboardMarkup
 from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
+import botDatas
 import pyspeedtest
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
@@ -36,26 +37,44 @@ def raidstatus():
 
 
 def memgraph(bot, chat_id, value):
-    bot.sendChatAction(chat_id, 'typing')
-    time = sum(MyGlobals.Datas['timing'])
-    if time < 60:
-        tmperiod = " last %d secondes" % time
-    if time >= 60 and time < 3600:
-        tmperiod = " last " + str(timedelta(seconds=
-                    sum(MyGlobals.Datas['timing']))) + " minutes"
-    if time >= 3600:
-        tmperiod = " last " + str(MyGlobals.GraphicHours) + " hours"
+    graphDatas = dict()
+    graphDatas['cpu'] = []
+    graphDatas['mem'] = []
+    graphDatas['temp'] = []
+    graphDatas['time'] = []
+    timep = len(botDatas.Datas['timing']) - 100
+    i = 0
+    mem = 0
+    cpu = 0
+    temp =0
+    for index in range(len(botDatas.Datas['timing']))[timep:len(botDatas.Datas['timing'])]:
+        cpu, mem, temp = botDatas.getfromDatas(botDatas.Datas['timing'][index])
+        graphDatas['cpu'].append(cpu)
+        graphDatas['mem'].append(mem)
+        graphDatas['temp'].append(temp)
+        graphDatas['time'].append(botDatas.Datas['timing'][index] - botDatas.Datas['timing'][timep])
+        #timep = index
+        i = i+1
+
     if value == 'all':
+        time = graphDatas['time'][-1]-graphDatas['time'][0]
+
+        if time < 60:
+            xlabel = " last %d secondes" % time
+        if time >= 60 and time < 3600:
+            xlabel = " last " + str(round(time/60)) + " minutes"
+        if time >= 3600:
+            xlabel = " last " + str(MyGlobals.GraphicHours) + " hours"
         bot.sendPhoto(chat_id,
-                      plotbiggraph(MyGlobals.Datas, MyGlobals.xaxis, tmperiod))
+                      plotbiggraph(graphDatas, MyGlobals.xaxis, xlabel))
 
 
 def plotbiggraph(Datas, xaxis, tmperiod):
+    print("drawing with Datas : ", Datas)
     xaxis = []
-    j = 0
-    for i in Datas['timing']:
-        j += i
-        xaxis.append(j)
+
+    Datas['time'][0] = 0
+    xaxis = Datas['time']
     plt.xlabel(tmperiod)
     plt.ylabel('% Used')
     plt.title('Memory, Cpu and Temperature Usage Graph')
@@ -65,8 +84,7 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     #usage graph
     plt.text(0.1 * len(xaxis), MyGlobals.usagethreshold + 2,
              'Cpu Threshold: ' + str(MyGlobals.usagethreshold) + ' %')
-    xaxis[0] = 0
-    Datas['timing'][0] = 0
+
     memthresholdarr = []
     usagethresholdarr = []
     for xas in xaxis:
@@ -85,7 +103,8 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     Datas['temp'][0] = 0
     plt.plot(xaxis, Datas['temp'], 'r-.', label="°C")
     #plt.axis([0, j, 0, 100])
-
+    j = 0
+    j = xaxis[-1]
     plt.axis('auto')
     if j < 7200:
         plt.xlim(0, j)
