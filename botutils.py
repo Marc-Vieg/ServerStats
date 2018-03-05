@@ -235,10 +235,13 @@ def bytes2human(n):
 
 def speedtest(bot, chat_id):
     bot.sendChatAction(chat_id, 'typing')
-    st = pyspeedtest.SpeedTest()
-    up = bytes2human(round(st.upload()/8))
-    down = bytes2human(round(st.download()/8))
-    ping = round(st.ping())
+    try:
+        st = pyspeedtest.SpeedTest()
+        up = bytes2human(round(st.upload()/8))
+        down = bytes2human(round(st.download()/8))
+        ping = round(st.ping())
+    except:
+        return str("Oops")
     return str("Up : " + str(up) +"\nDown : "+ str(down) + "\nPing : " + str(ping))
 
 
