@@ -44,8 +44,8 @@ def settinggraphichours(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.GraphicHours = round(float(msg['text'])*3600)
-            if MyGlobals.GraphicHours < 49*3600:
+            MyGlobals.GraphicHours = round(float(msg['text']) * 3600)
+            if MyGlobals.GraphicHours < 49 * 3600:
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -113,8 +113,8 @@ def setpoll(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.currentMenu = 'settingpollth'
     bot.sendMessage(chat_id,
-                    "Send me a new polling interval in seconds? " +
-                    "(higher than 10)", reply_markup=setPollKeyboard)
+                    "Send me a new polling interval in seconds? (>= 10)",
+                     reply_markup=setPollKeyboard)
 
 
 def settingpollth(bot, chat_id, msg):
@@ -125,15 +125,14 @@ def settingpollth(bot, chat_id, msg):
     else:
         try:
             MyGlobals.poll = int(msg['text'])
-            if MyGlobals.poll > 9:
+            if MyGlobals.poll >= 10:
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
                 1 / 0
         except:
             bot.sendMessage(chat_id,
-                            "Please send a proper numeric value "
-                            + "higher than 10.")
+                            "Please send a proper numeric value >= 10")
 
 
 def Alerts(bot, chat_id):

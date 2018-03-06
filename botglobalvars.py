@@ -12,14 +12,12 @@ class MyGlobals(object):
     memorythreshold = 60  # If memory usage more this %
     usagethreshold = 70  # If cpu usage is more than this %
     poll = 10  # seconds
-    # I'ld like to make an interval for auto sending graph, maybe later...
     pollSurv = 30
     LISTSMAX = 864000
-    #nb d'heures a afficher dans le graphique
-    GraphicHours = 3*3600
+    #hours to show in grap (can be 0.5 to 30 minutes for example)
+    GraphicHours = 3 * 3600
 
     Datas = dict()
-    #Datas['init'] = datetime.now()
     Datas['timing'] = []
     Datas['cpu'] = []
     Datas['mem'] = []
@@ -34,7 +32,6 @@ class MyGlobals(object):
     settorrenttype = []
     graphstart = datetime.now()
     shellexecution = []
-    #MAINSLEEP = 5
     alertsEnlabed = True
     mainKeyboard = ReplyKeyboardMarkup(keyboard=[
                      ['Utils', 'Settings'],

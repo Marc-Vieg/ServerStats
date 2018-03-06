@@ -1,5 +1,4 @@
 import json
-import datetime
 import time
 
 Datas = dict()
@@ -9,13 +8,11 @@ Datas['mem'] = []
 Datas['temp'] = []
 
 
-
 def appendData(cpu, mem, temp):
     Datas['timing'].append(round(time.time()))
     Datas['cpu'].append(round(cpu))
     Datas['mem'].append(round(mem))
     Datas['temp'].append(round(temp))
-    #print(str(Datas))
 
 
 def save():
@@ -39,21 +36,7 @@ def charges():
 
 
 def getfromDatas(date):
-    return  Datas['cpu'][Datas['timing'].index(date)], Datas['mem'][Datas['timing'].index(date)], Datas['temp'][Datas['timing'].index(date)]
+    return  Datas['cpu'][Datas['timing'].index(date)], \
+             Datas['mem'][Datas['timing'].index(date)], \
+              Datas['temp'][Datas['timing'].index(date)]
 
-
-
-
-if __name__ == "__main__":
-    charges()
-    appendData(1, 1, 1)
-    time.sleep(1)
-    appendData(2, 2, 2)
-    time.sleep(1)
-    appendData(3, 3, 3)
-    print(str(Datas))
-    for index in range(len(Datas['timing'])):
-        print(Datas['timing'][index])
-        print(getfromDatas(Datas['timing'][index]))
-    save()
-    #getfromDatas()

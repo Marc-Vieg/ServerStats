@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import operator
 import psutil
 from datetime import datetime
-from datetime import timedelta
 from telepot.namedtuple import ReplyKeyboardMarkup
 from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
@@ -42,14 +41,16 @@ def memgraph(bot, chat_id, value):
     graphDatas['mem'] = []
     graphDatas['temp'] = []
     graphDatas['time'] = []
-    #--TODO retravailler timep pour que je puisse choisir
-    #la duree du graphique depuis botsettings
     timep = 0
-    timeWanted = botDatas.Datas['timing'][-1] - MyGlobals.GraphicHours # on veut deux heures de grap
+    # on veut deux heures de grap
+    timeWanted = botDatas.Datas['timing'][-1] - MyGlobals.GraphicHours
     for date in botDatas.Datas['timing']:
         if (date in range(timeWanted - 10, timeWanted + 10)):
-            print(date, "is the winner, at pos", botDatas.Datas['timing'].index(date))
-            print("data timming ", botDatas.Datas['timing'][botDatas.Datas['timing'].index(date)], " = ", botDatas.Datas['timing'].index(date))
+            #print((date, "is the winner, at pos",
+                #botDatas.Datas['timing'].index(date)))
+            #print(("data timming ",
+                #botDatas.Datas['timing'][botDatas.Datas['timing'].index(date)],
+                #" = ", botDatas.Datas['timing'].index(date)))
             timep = botDatas.Datas['timing'].index(date)
             break
     if (timep == 0):
@@ -57,33 +58,33 @@ def memgraph(bot, chat_id, value):
     i = 0
     mem = 0
     cpu = 0
-    temp =0
-    for index in range(len(botDatas.Datas['timing']))[timep:len(botDatas.Datas['timing'])]:
+    temp = 0
+    for index in range(
+            len(botDatas.Datas['timing']))[timep:len(botDatas.Datas['timing'])]:
         cpu, mem, temp = botDatas.getfromDatas(botDatas.Datas['timing'][index])
         graphDatas['cpu'].append(cpu)
         graphDatas['mem'].append(mem)
         graphDatas['temp'].append(temp)
-        graphDatas['time'].append(botDatas.Datas['timing'][index] - botDatas.Datas['timing'][timep])
+        graphDatas['time'].append(botDatas.Datas['timing'][index]
+                                - botDatas.Datas['timing'][timep])
         #timep = index
-        i = i+1
+        i = i + 1
 
     if value == 'all':
-        time = graphDatas['time'][-1]-graphDatas['time'][0]
+        time = graphDatas['time'][-1] - graphDatas['time'][0]
 
         if time < 60:
             xlabel = " last %d secondes" % time
         if time >= 60 and time < 3600:
-            xlabel = " last " + str(round(time/60)) + " minutes"
+            xlabel = " last " + str(round(time / 60)) + " minutes"
         if time >= 3600:
-            xlabel = " last " + str(round(time/3600)) + " hours"
+            xlabel = " last " + str(round(time / 3600)) + " hours"
         bot.sendPhoto(chat_id,
                       plotbiggraph(graphDatas, MyGlobals.xaxis, xlabel))
 
 
 def plotbiggraph(Datas, xaxis, tmperiod):
-    #print("drawing with Datas : ", Datas)
     xaxis = []
-
     Datas['time'][0] = 0
     xaxis = Datas['time']
     plt.xlabel(tmperiod)
@@ -229,6 +230,7 @@ def getip(bot, chat_id):
     bot.sendMessage(chat_id, str("Mon IP publique actuelle : "
                     + str(output)), reply_markup=myKeyboard)
 
+
 def disks():
     print((str("je suis dans " + __name__ + ".disks")))
 #code from pysysbot https://github.com/fabaff/pysysbot
@@ -243,7 +245,6 @@ def disks():
                         bytes2human(usage.free),
                         int(usage.percent),
                         part.mountpoint)
-    #print(str(disks))
     return str(disks)
 
 
@@ -265,12 +266,14 @@ def speedtest(bot, chat_id):
     bot.sendChatAction(chat_id, 'typing')
     try:
         st = pyspeedtest.SpeedTest()
-        up = bytes2human(round(st.upload()/8))
-        down = bytes2human(round(st.download()/8))
+        up = bytes2human(round(st.upload() / 8))
+        down = bytes2human(round(st.download() / 8))
         ping = round(st.ping())
     except:
         return str("Oops")
-    return str("Up : " + str(up) +"\nDown : "+ str(down) + "\nPing : " + str(ping))
+    return str("Up : " + str(up) +
+            "\nDown : " + str(down) +
+            "\nPing : " + str(ping))
 
 
 def main(bot, TOKEN, chat_id, msg):
@@ -294,7 +297,8 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
     elif msg['text'] == 'speedtest':
-        bot.sendMessage(chat_id, speedtest(bot, chat_id), reply_markup=myKeyboard)
+        bot.sendMessage(chat_id, speedtest(bot, chat_id),
+                        reply_markup=myKeyboard)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id, "retour au menu principal",

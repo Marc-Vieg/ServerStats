@@ -4,13 +4,10 @@ import botutils
 from botglobalvars import MyGlobals
 import botsettings as settings
 import psutil
-from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
 import othersmenu
-import collections
 import time
 import telepot
-import botpersist as persist
 import botDatas
 
 
