@@ -2,3 +2,9 @@ tokens.py
 graph.png
 botDatas.json
 ssb.pid
+Datas.json
+__pycache__/
+botfunction.pyc
+botutils.pyc
+serverstatsbot.nja
+tokens.pyc
