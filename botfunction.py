@@ -137,8 +137,7 @@ def main():
             if MyGlobals.surveillanceActive:
                 for adminid in adminchatid:
                     bot.sendChatAction(adminid, 'typing')
-                    bot.sendPhoto(adminid,
-                         botutils.memgraph(bot, chat_id, 'all'))
+                    botutils.memgraph(bot, adminid, 'all')
                     bot.sendMessage(adminid,
                                     "rapport de surveillance toutes les "
                                     + str(MyGlobals.poll) + " secondes")
