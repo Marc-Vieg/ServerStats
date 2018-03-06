@@ -134,18 +134,14 @@ def main():
     # Keep the program running.
     while 1:
         if tr == MyGlobals.poll:
-            #if MyGlobals.surveillanceActive:
-                #for adminid in adminchatid:
-                    #bot.sendChatAction(adminid, 'typing')
-                    #tmperiod = "Last %.2f hours"\
-                               #% ((datetime.now()
-                               #- MyGlobals.graphstart).total_seconds() / 3600)
-                    #bot.sendPhoto(adminid,
-                        #botutils.plotbiggraph(botDatas.Datas,
-                                              #MyGlobals.xaxis, tmperiod))
-                    #bot.sendMessage(adminid,
-                                    #"rapport de surveillance toutes les "
-                                    #+ str(MyGlobals.poll) + " secondes")
+            if MyGlobals.surveillanceActive:
+                for adminid in adminchatid:
+                    bot.sendChatAction(adminid, 'typing')
+                    bot.sendPhoto(adminid,
+                         botutils.memgraph(bot, chat_id, 'all'))
+                    bot.sendMessage(adminid,
+                                    "rapport de surveillance toutes les "
+                                    + str(MyGlobals.poll) + " secondes")
             tr = 0
             memck = psutil.virtual_memory()
             mempercent = memck.percent
@@ -162,46 +158,22 @@ def main():
             botDatas.appendData(usagepercent, mempercent, tempMoyenne)
 
             ##alerte si memoire faible
-            #if (mempercent > MyGlobals.memorythreshold
-                #and MyGlobals.alertsEnlabed is True):
-                #memavail = "Available memory: %.2f GB" \
-                           #% (memck.available / 1000000000)
-                #timep = 0
-                #for i in range(0, len(botDatas.Datas['timing'])):
-                    #timep += botDatas.Datas['timing'][i]
-                #if timep < 60:
-                    #tmperiod = " last %d secondes" % time
-                #if timep >= 60 and timep < 3600:
-                    #tmperiod = " last %d minutes" % (time / 60)
-                #if timep >= 3600:
-                    #tmperiod = " last " + str(MyGlobals.GraphicHours)\
-                             #+ " hours"
-                #for adminid in adminchatid:
-                    #bot.sendMessage(adminid, "CRITICAL! LOW MEMORY!\n"
-                                    #+ memavail + '\n' + str(mempercent)
-                                    #+ '% of memory used')
-                    #bot.sendPhoto(adminid,
-                        #botutils.plotbiggraph(botDatas.Datas,
-                                              #MyGlobals.xaxis, tmperiod))
+            if (mempercent > MyGlobals.memorythreshold
+                and MyGlobals.alertsEnlabed is True):
+                memavail = "Available memory: %.2f GB" \
+                           % (memck.available / 1000000000)
+                for adminid in adminchatid:
+                    bot.sendMessage(adminid, "CRITICAL! LOW MEMORY!\n"
+                                    + memavail + '\n' + str(mempercent)
+                                    + '% of memory used')
+                    botutils.memgraph(bot, adminid, 'all')
             ##alerte si proc surchargé
-            #if (usagepercent > MyGlobals.usagethreshold
-                #and MyGlobals.alertsEnlabed is True):
-                #timep = 0
-                #for i in range(0, len(botDatas.Datas['timing'])):
-                    #timep += botDatas.Datas['timing'][i]
-                #if timep < 60:
-                    #tmperiod = " last %d secondes" % timep
-                #if timep >= 60 and timep < 3600:
-                    #tmperiod = " last %d minutes" % (timep / 60)
-                #if timep >= 3600:
-                    #tmperiod = " last " + str(MyGlobals.GraphicHours) + " hours"
-                #for adminid in adminchatid:
-                    #bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
-                                    #+ str(usagepercent) + '% of cpu used')
-                    #bot.sendPhoto(adminid,
-                            #botutils.plotbiggraph(botDatas.Datas,
-                                                  #MyGlobals.xaxis,
-                                                  #tmperiod))
+            if (usagepercent > MyGlobals.usagethreshold
+                and MyGlobals.alertsEnlabed is True):
+                for adminid in adminchatid:
+                    bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
+                                    + str(usagepercent) + '% of cpu used')
+                    botutils.memgraph(bot, adminid, 'all')
         botDatas.save()
         time.sleep(10)  # 10 seconds
         tr += 10

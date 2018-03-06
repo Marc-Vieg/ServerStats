@@ -42,7 +42,9 @@ def memgraph(bot, chat_id, value):
     graphDatas['mem'] = []
     graphDatas['temp'] = []
     graphDatas['time'] = []
-    timep = len(botDatas.Datas['timing']) - 100
+    #--TODO retravailler timep pour que je puisse choisir
+    #la duree du graphique depuis botsettings
+    timep = len(botDatas.Datas['timing']) - 1000
     i = 0
     mem = 0
     cpu = 0
@@ -64,13 +66,13 @@ def memgraph(bot, chat_id, value):
         if time >= 60 and time < 3600:
             xlabel = " last " + str(round(time/60)) + " minutes"
         if time >= 3600:
-            xlabel = " last " + str(MyGlobals.GraphicHours) + " hours"
+            xlabel = " last " + str(round(time/3600)) + " hours"
         bot.sendPhoto(chat_id,
                       plotbiggraph(graphDatas, MyGlobals.xaxis, xlabel))
 
 
 def plotbiggraph(Datas, xaxis, tmperiod):
-    print("drawing with Datas : ", Datas)
+    #print("drawing with Datas : ", Datas)
     xaxis = []
 
     Datas['time'][0] = 0
@@ -106,10 +108,8 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     j = 0
     j = xaxis[-1]
     plt.axis('auto')
-    if j < 7200:
-        plt.xlim(0, j)
-    else:
-        plt.xlim(j - (MyGlobals.GraphicHours * 3600), j)
+
+    plt.xlim(0, j)
     plt.ylim(0, 100)
 
     plt.savefig('/tmp/graph.png')
