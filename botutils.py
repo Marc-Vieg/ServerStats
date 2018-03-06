@@ -53,7 +53,7 @@ def memgraph(bot, chat_id, value):
             timep = botDatas.Datas['timing'].index(date)
             break
     if (timep == 0):
-        timep = len(botDatas.Datas['timing']) - 300
+        timep = 10
     i = 0
     mem = 0
     cpu = 0
