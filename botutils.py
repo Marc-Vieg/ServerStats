@@ -44,7 +44,16 @@ def memgraph(bot, chat_id, value):
     graphDatas['time'] = []
     #--TODO retravailler timep pour que je puisse choisir
     #la duree du graphique depuis botsettings
-    timep = len(botDatas.Datas['timing']) - 1000
+    timep = 0
+    timeWanted = botDatas.Datas['timing'][-1] - MyGlobals.GraphicHours # on veut deux heures de grap
+    for date in botDatas.Datas['timing']:
+        if (date in range(timeWanted - 10, timeWanted + 10)):
+            print(date, "is the winner, at pos", botDatas.Datas['timing'].index(date))
+            print("data timming ", botDatas.Datas['timing'][botDatas.Datas['timing'].index(date)], " = ", botDatas.Datas['timing'].index(date))
+            timep = botDatas.Datas['timing'].index(date)
+            break
+    if (timep == 0):
+        timep = len(botDatas.Datas['timing']) - 300
     i = 0
     mem = 0
     cpu = 0

@@ -44,8 +44,8 @@ def settinggraphichours(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.GraphicHours = float(msg['text'])
-            if MyGlobals.GraphicHours < 49:
+            MyGlobals.GraphicHours = round(float(msg['text'])*3600)
+            if MyGlobals.GraphicHours < 49*3600:
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:

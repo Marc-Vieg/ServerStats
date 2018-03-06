@@ -16,7 +16,7 @@ class MyGlobals(object):
     pollSurv = 30
     LISTSMAX = 864000
     #nb d'heures a afficher dans le graphique
-    GraphicHours = 3
+    GraphicHours = 3*3600
 
     Datas = dict()
     #Datas['init'] = datetime.now()
