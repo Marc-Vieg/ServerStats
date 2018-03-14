@@ -5,7 +5,7 @@ import os
 
 
 def loadSettings(path):
-    #load settings from file to replace default values in MyGlobals
+    #load settings from file to replace default values in MyGlobals (temporary)
     MyGlobals.alertsEnlabed = getConfig(path, 'Alerts', 'sendAlerts', 'bool')
     MyGlobals.surveillanceActive = getConfig(path, 'Alerts', 'autoSend', 'bool')
     MyGlobals.memorythreshold = getConfig(path, 'Graph', 'memth', 'int')
@@ -29,7 +29,6 @@ def createConfig(path):
     Create a config file
     """
     config = ConfigObj(path)
-    #
     graphSection = {
         'length': 12,
         'cputh': 90,
@@ -54,10 +53,8 @@ def createConfig(path):
 def getConfig(path, section, option, type):
     config = ConfigObj(path)
     if type == 'str':
-        #print((path, ':', section, option, config[section][option]))
         return config[section][option]
     elif type == 'int':
-        #print('int : ', section, option, config[section].as_int(option))
         return config[section].as_int(option)
     elif type == 'bool':
         print('bool : ', section, option, config[section].as_bool(option))
@@ -66,7 +63,6 @@ def getConfig(path, section, option, type):
             return 1
         else:
             return 0
-        #return result
 
 if __name__ == "__main__":
     path = "settings.ini"
