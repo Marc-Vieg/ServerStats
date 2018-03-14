@@ -10,6 +10,7 @@ from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
 import botDatas
 import pyspeedtest
+import botConfig as config
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
@@ -43,14 +44,10 @@ def memgraph(bot, chat_id, value):
     graphDatas['time'] = []
     timep = 0
     # on veut deux heures de grap
-    timeWanted = botDatas.Datas['timing'][-1] - MyGlobals.GraphicHours
+    timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
+                        'settings.ini', 'Graph', 'length', 'int')
     for date in botDatas.Datas['timing']:
-        if (date in range(timeWanted - 10, timeWanted + 10)):
-            #print((date, "is the winner, at pos",
-                #botDatas.Datas['timing'].index(date)))
-            #print(("data timming ",
-                #botDatas.Datas['timing'][botDatas.Datas['timing'].index(date)],
-                #" = ", botDatas.Datas['timing'].index(date)))
+        if (date in range(timeWanted - 100, timeWanted + 100)):
             timep = botDatas.Datas['timing'].index(date)
             break
     if (timep == 0):
@@ -91,18 +88,20 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     plt.ylabel('% Used')
     plt.title('Memory, Cpu and Temperature Usage Graph')
     #mem graph
-    plt.text(0.1 * len(xaxis), MyGlobals.memorythreshold + 2,
-             'Memory Threshold: ' + str(MyGlobals.memorythreshold) + ' %')
+    memorythreshold = config.getConfig('settings.ini', 'Graph', 'memth', 'int')
+    plt.text(0.1 * len(xaxis), memorythreshold + 2,
+             'Memory Threshold: ' + str(memorythreshold) + ' %')
     #usage graph
-    plt.text(0.1 * len(xaxis), MyGlobals.usagethreshold + 2,
-             'Cpu Threshold: ' + str(MyGlobals.usagethreshold) + ' %')
+    usagethreshold = config.getConfig('settings.ini', 'Graph', 'cputh', 'int')
+    plt.text(0.1 * len(xaxis), usagethreshold + 2,
+             'Cpu Threshold: ' + str(usagethreshold) + ' %')
 
     memthresholdarr = []
     usagethresholdarr = []
     for xas in xaxis:
-        memthresholdarr.append(MyGlobals.memorythreshold)
+        memthresholdarr.append(memorythreshold)
     for xas in xaxis:
-        usagethresholdarr.append(MyGlobals.usagethreshold)
+        usagethresholdarr.append(usagethreshold)
     plt.plot(xaxis, memthresholdarr, 'g--',
              xaxis, usagethresholdarr, 'b--')
     #mem

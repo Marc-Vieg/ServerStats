@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from telepot.namedtuple import ReplyKeyboardMarkup
 from botglobalvars import MyGlobals
+import botConfig as config
 
 submenus = ['settinghoursth', 'setmem',
             'settingmemth', 'setcpu',
@@ -10,7 +11,7 @@ submenus = ['settinghoursth', 'setmem',
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['setmem', 'setcpu'],
     ['setpoll', 'Alerts On/Off'],
-    ['nb d heures graphique'],
+    ['Graph Length'],
     ['<- RETOUR']])
 
 setKeyboard = ReplyKeyboardMarkup(keyboard=[
@@ -44,8 +45,9 @@ def settinggraphichours(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.GraphicHours = round(float(msg['text']) * 3600)
-            if MyGlobals.GraphicHours < 49 * 3600:
+            if int(msg['text']) < 100 * 3600:
+                config.setConfig('settings.ini', 'Graph', 'length',
+                    round(float(msg['text']) * 3600))
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -71,8 +73,9 @@ def settingmemth(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.memorythreshold = int(msg['text'])
-            if MyGlobals.memorythreshold < 100:
+            if int(msg['text']) < 100:
+                config.setConfig('settings.ini', 'Graph', 'memth',
+                            int(msg['text']))
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -98,8 +101,9 @@ def settingcputh(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.usagethreshold = int(msg['text'])
-            if MyGlobals.usagethreshold < 100:
+            if int(msg['text']) < 100:
+                config.setConfig('settings.ini', 'Graph', 'cputh',
+                            int(msg['text']))
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -124,8 +128,9 @@ def settingpollth(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            MyGlobals.poll = int(msg['text'])
-            if MyGlobals.poll >= 10:
+            if int(msg['text']) >= 10:
+                config.setConfig('settings.ini', 'Bot', 'poll',
+                            int(msg['text']))
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -137,8 +142,13 @@ def settingpollth(bot, chat_id, msg):
 
 def Alerts(bot, chat_id):
     bot.sendChatAction(chat_id, 'typing')
-    MyGlobals.alertsEnlabed = not MyGlobals.alertsEnlabed
-    if MyGlobals.alertsEnlabed:
+    #botconfig is not recognizing the string 'True' as boolean 1, it recognise 'true'...
+    if config.getConfig('settings.ini', 'Alerts', 'sendAlerts', 'bool'):
+        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 'false')
+    else:
+        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 'true')
+
+    if config.getConfig('settings.ini', 'Alerts', 'sendAlerts', 'bool'):
         bot.sendMessage(chat_id,
                         "Les alertes sont Activees",
                          disable_web_page_preview=True)
@@ -168,7 +178,7 @@ def main(bot, TOKEN, chat_id, msg):
         setpoll(bot, chat_id, msg)
     elif MyGlobals.currentMenu == 'settingpollth':
         settingpollth(bot, chat_id, msg)
-    elif (msg['text'] == 'nb d heures graphique'
+    elif (msg['text'] == 'Graph Length'
           and MyGlobals.currentMenu == 'Settings'):
         setgraphichours(bot, chat_id, msg)
     elif MyGlobals.currentMenu == 'settinghoursth':

@@ -29,7 +29,6 @@ class MyGlobals(object):
     settingmemth = []
     settingcputh = []
     setpolling = []
-    settorrenttype = []
     graphstart = datetime.now()
     shellexecution = []
     alertsEnlabed = True
