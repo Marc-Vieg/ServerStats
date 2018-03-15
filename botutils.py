@@ -144,6 +144,7 @@ def stats(bot, chat_id):
     memuseperc = "Used memory: " + str(memory.percent) + " %"
     diskused = "Disk used: " + str(disk.percent) + " %"
     cpupercent = "Cpu usage: " + str(psutil.cpu_percent(1)) + " %"
+    network = speedtest()
     pids = psutil.pids()
     pidsreply = ''
     cpusreply = ''
@@ -185,6 +186,7 @@ def stats(bot, chat_id):
             memavail + "\n" + \
             memuseperc + "\n" + \
             diskused + "\n" + \
+            network + "\n" + \
             cpupercent + "\n\n" + \
             pidsreply + "\n " + \
             cpusreply + "\n\n"
@@ -264,8 +266,7 @@ def bytes2human(n):
     return "%sB" % n
 
 
-def speedtest(bot, chat_id):
-    bot.sendChatAction(chat_id, 'typing')
+def speedtest():
     try:
         st = pyspeedtest.SpeedTest()
         up = bytes2human(round(st.upload() / 8))
@@ -299,7 +300,8 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
     elif msg['text'] == 'speedtest':
-        bot.sendMessage(chat_id, speedtest(bot, chat_id),
+        bot.sendChatAction(chat_id, 'typing')
+        bot.sendMessage(chat_id, speedtest(),
                         reply_markup=myKeyboard)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
