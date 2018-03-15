@@ -4,8 +4,6 @@ import os
 import botConfig as config
 
 
-
-
 if __name__ == "__main__":
     pid = os.getpid()
     op = open("ssb.pid", "w")

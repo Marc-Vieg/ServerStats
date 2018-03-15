@@ -2,22 +2,29 @@
 from configobj import ConfigObj
 import botglobalvars as MyGlobals
 import os
+import time
 
 
 def loadSettings(path):
     #load settings from file to replace default values in MyGlobals (temporary)
-    MyGlobals.alertsEnlabed = getConfig(path, 'Alerts', 'sendAlerts', 'bool')
-    MyGlobals.surveillanceActive = getConfig(path, 'Alerts', 'autoSend', 'bool')
+    MyGlobals.sendAlerts = getConfig(path, 'Alerts', 'sendAlerts', 'bool')
+    MyGlobals.autoSend = getConfig(path, 'Alerts', 'autoSend', 'bool')
+    MyGlobals.autoSendTime = getConfig(path, 'Alerts', 'autoSendTime', 'int')
     MyGlobals.memorythreshold = getConfig(path, 'Graph', 'memth', 'int')
     MyGlobals.usagethreshold = getConfig(path, 'Graph', 'cputh', 'int')
-    MyGlobals.GraphicHours = getConfig(path, 'Graph', 'length', 'int') * 3600
+    MyGlobals.GraphicHours = getConfig(path, 'Graph', 'length', 'int')
+    MyGlobals.poll = getConfig(path, 'Bot', 'poll', 'int')
+    print("settings loaded", MyGlobals.sendAlerts)
 
 
 def setConfig(path, section, option, value):
     config = ConfigObj(path)
     config[section][option] = value
     print(section, option, value, config[section][option])
-    config.write()
+    try:
+        config.write()
+    except:
+        print("error writing config file")
 
 
 def exist(path):
@@ -57,7 +64,7 @@ def getConfig(path, section, option, type):
     elif type == 'int':
         return config[section].as_int(option)
     elif type == 'bool':
-        print('bool : ', section, option, config[section].as_bool(option))
+        #print('bool : ', section, option, config[section].as_bool(option))
         result = config[section].as_bool(option)
         if result:
             return 1

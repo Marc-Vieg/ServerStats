@@ -44,8 +44,11 @@ def memgraph(bot, chat_id, value):
     graphDatas['time'] = []
     timep = 0
     # on veut deux heures de grap
-    timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
-                        'settings.ini', 'Graph', 'length', 'int')
+    try:
+        timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
+                            'settings.ini', 'Graph', 'length', 'int')
+    except IndexError:
+        bot.sendMessage(bot, chat_id, "I don't havve so much Datas")
     for date in botDatas.Datas['timing']:
         if (date in range(timeWanted - 100, timeWanted + 100)):
             timep = botDatas.Datas['timing'].index(date)
@@ -165,7 +168,7 @@ def stats(bot, chat_id):
         p = psutil.Process(pid)
         try:
             pcpu = p.cpu_percent(interval=0.01) / psutil.cpu_count()
-            print((str(p.name()) + " " + str(pcpu)))
+            #print((str(p.name()) + " " + str(pcpu)))
             if pcpu > 0.1:
                 if p.name() in procscpu:
                     procscpu[p.name()] += pcpu

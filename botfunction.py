@@ -128,8 +128,8 @@ def main():
     tr = 0
     # Keep the program running.
     while 1:
-        if tr == config.getConfig('settings.ini', 'Bot', 'poll', 'int'):
-            if config.getConfig('settings.ini', 'Alerts', 'autoSend', 'bool'):
+        if tr == MyGlobals.poll:
+            if MyGlobals.autoSend:
                 for adminid in adminchatid:
                     bot.sendChatAction(adminid, 'typing')
                     botutils.memgraph(bot, adminid, 'all')
@@ -152,9 +152,8 @@ def main():
             botDatas.appendData(usagepercent, mempercent, tempMoyenne)
 
             ##alert if memory is low
-            if (mempercent > config.getConfig('settings.ini',
-            'Graph', 'memth', 'int') and config.getConfig('settings.ini',
-                                    'Alerts', 'sendAlerts', 'bool')):
+            if ((mempercent > MyGlobals.memorythreshold)
+                                and MyGlobals.sendAlerts):
                 memavail = "Available memory: %.2f GB" \
                            % (memck.available / 1000000000)
                 for adminid in adminchatid:
@@ -163,9 +162,8 @@ def main():
                                     + '% of memory used')
                     botutils.memgraph(bot, adminid, 'all')
             ##alert if cpu usage percent is high
-            if (usagepercent > config.getConfig('settings.ini',
-            'Graph', 'cputh', 'int') and config.getConfig('settings.ini',
-            'Alerts', 'sendAlerts', 'bool')):
+            if ((usagepercent > MyGlobals.usagethreshold)
+                                and MyGlobals.sendAlerts):
                 for adminid in adminchatid:
                     bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
                                     + str(usagepercent) + '% of cpu used')

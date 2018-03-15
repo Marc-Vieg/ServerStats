@@ -34,7 +34,7 @@ def setgraphichours(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
     MyGlobals.currentMenu = 'settinghoursth'
     bot.sendMessage(chat_id,
-                    "combien d'heures a afficher dans le graphique ?",
+                    "How many hours to show in graphic ?",
                     reply_markup=sethoursKeyboard)
 
 
@@ -45,9 +45,10 @@ def settinggraphichours(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            if int(msg['text']) < 100 * 3600:
+            if float(msg['text']) < 100 * 3600:
                 config.setConfig('settings.ini', 'Graph', 'length',
                     round(float(msg['text']) * 3600))
+                config.loadSettings('settings.ini')
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -76,6 +77,7 @@ def settingmemth(bot, chat_id, msg):
             if int(msg['text']) < 100:
                 config.setConfig('settings.ini', 'Graph', 'memth',
                             int(msg['text']))
+                config.loadSettings('settings.ini')
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -104,6 +106,7 @@ def settingcputh(bot, chat_id, msg):
             if int(msg['text']) < 100:
                 config.setConfig('settings.ini', 'Graph', 'cputh',
                             int(msg['text']))
+                config.loadSettings('settings.ini')
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -131,6 +134,7 @@ def settingpollth(bot, chat_id, msg):
             if int(msg['text']) >= 10:
                 config.setConfig('settings.ini', 'Bot', 'poll',
                             int(msg['text']))
+                config.loadSettings('settings.ini')
                 bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
                 MyGlobals.currentMenu = 'Settings'
             else:
@@ -143,26 +147,26 @@ def settingpollth(bot, chat_id, msg):
 def Alerts(bot, chat_id):
     bot.sendChatAction(chat_id, 'typing')
     #botconfig is not recognizing the string 'True' as boolean 1, it recognise 'true'...
-    if config.getConfig('settings.ini', 'Alerts', 'sendAlerts', 'bool'):
-        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 'false')
+    if MyGlobals.sendAlerts:
+        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 0)
     else:
-        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 'true')
-
-    if config.getConfig('settings.ini', 'Alerts', 'sendAlerts', 'bool'):
+        config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 1)
+    MyGlobals.sendAlerts = config.getConfig('settings.ini',
+                                'Alerts', 'sendAlerts', 'bool')
+    if MyGlobals.sendAlerts:
         bot.sendMessage(chat_id,
-                        "Les alertes sont Activees",
+                        "I'll send Alerts'",
                          disable_web_page_preview=True)
     else:
         bot.sendMessage(chat_id,
-                        "Les alertes sont desactivees",
+                        "I won't send Alerts",
                         disable_web_page_preview=True)
 
 
 def main(bot, TOKEN, chat_id, msg):
-    print((str("je suis dans " + __name__)))
     if msg['text'] == 'Settings':
         bot.sendMessage(chat_id,
-                        str("Bienvenue dans les parametres du bot"),
+                        str("Welcome to settings"),
                         reply_markup=myKeyboard)
         MyGlobals.currentMenu = 'Settings'
     elif msg['text'] == 'setmem':
@@ -188,5 +192,5 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id,
-                        "retour au menu principal",
+                        "Back to menu",
                         reply_markup=MyGlobals.mainKeyboard)
