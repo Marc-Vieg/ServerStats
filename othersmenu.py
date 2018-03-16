@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from telepot.namedtuple import ReplyKeyboardMarkup
 from botglobalvars import MyGlobals
+import botConfig as config
 import os
 import time
 import shlex
@@ -16,6 +17,9 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
 
  #TODO: compile :don't send x alerts of cpu when compiling, I know it's hard
 def compile(bot, chat_id):
+    config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 1)
+    MyGlobals.sendAlerts = config.getConfig('settings.ini',
+                                'Alerts', 'sendAlerts', 'bool')
     buildScript = dict()
     buildScript['path'] = '/home/build/buildScript'
     buildScript['name'] = 'buildscript.sh'
