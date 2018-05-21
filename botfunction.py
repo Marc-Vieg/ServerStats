@@ -33,8 +33,6 @@ def clearall(chat_id):
         settingmemth.remove(chat_id)
     if chat_id in MyGlobals.setpolling:
         setpolling.remove(chat_id)
-    if chat_id in MyGlobals.settorrenttype:
-        settorrenttype.remove(chat_id)
 
 
 class YourBot(telepot.Bot):

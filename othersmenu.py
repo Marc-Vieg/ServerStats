@@ -15,7 +15,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['<- RETOUR']])
 
 
- #TODO: compile :don't send x alerts of cpu when compiling, I know it's hard
+ #Done : auto set send alert Off when starting the build
 def compile(bot, chat_id):
     config.setConfig('settings.ini', 'Alerts', 'sendAlerts', 1)
     MyGlobals.sendAlerts = config.getConfig('settings.ini',
@@ -29,7 +29,7 @@ def compile(bot, chat_id):
     p = Popen(command_line, shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
 
 
-#cpu usage alert
+
 def restartBot(bot, chat_id, msg):
     MyGlobals.currentMenu = 'Restarting'
     bot.sendMessage(chat_id, "le bot redemarre", reply_markup=myKeyboard)
@@ -37,12 +37,12 @@ def restartBot(bot, chat_id, msg):
     args = shlex.split(command_line)
     pid = os.fork()
     if pid:
-        print ("i am children ! restartin in 2 s")
+        #print ("i am children ! restartin in 2 s")
         subprocess.Popen(args)
         time.sleep(5)
         os._exit(1)
     else:
-        print("i am fatcher, retiring..")
+        #print("i am fatcher, retiring..")
         os._exit(0)
 
 

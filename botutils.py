@@ -48,7 +48,7 @@ def memgraph(bot, chat_id, value):
         timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
                             'settings.ini', 'Graph', 'length', 'int')
     except IndexError:
-        bot.sendMessage(bot, chat_id, "I don't havve so much Datas")
+        bot.sendMessage(bot, chat_id, "I don't have so much Datas")
     for date in botDatas.Datas['timing']:
         if (date in range(timeWanted - 100, timeWanted + 100)):
             timep = botDatas.Datas['timing'].index(date)
