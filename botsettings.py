@@ -45,7 +45,7 @@ def settinggraphichours(bot, chat_id, msg):
         bot.sendMessage(chat_id, "All set!", reply_markup=myKeyboard)
     else:
         try:
-            if float(msg['text']) < 100 * 3600:
+            if float(msg['text']) < 240 * 3600:
                 config.setConfig('settings.ini', 'Graph', 'length',
                     round(float(msg['text']) * 3600))
                 config.loadSettings('settings.ini')

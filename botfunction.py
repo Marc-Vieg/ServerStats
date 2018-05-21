@@ -166,6 +166,6 @@ def main():
                     bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
                                     + str(usagepercent) + '% of cpu used')
                     botutils.memgraph(bot, adminid, 'all')
-        botDatas.save()
+        #botDatas.save()
         time.sleep(10)  # 10 seconds
         tr += 10
