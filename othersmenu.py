@@ -12,6 +12,7 @@ startupScript = '/usr/sbin/serverstatsbot.sh'
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['Compile LineageOs'],
     ['Status', 'Restart Bot'],
+    ['Restart Emby'],
     ['<- RETOUR']])
 
 
@@ -27,7 +28,6 @@ def compile(bot, chat_id):
                    + buildScript['path'] + "/"
                    + buildScript['name'] + " > /tmp/lastCompilation.log")
     p = Popen(command_line, shell=True, stdin=PIPE, stderr=STDOUT, stdout=PIPE, close_fds=True)
-
 
 
 def restartBot(bot, chat_id, msg):
@@ -80,6 +80,13 @@ def main(bot, chat_id, msg):
     elif (msg['text'] == 'Status'
           and MyGlobals.currentMenu == 'Others'):
             compilStatus(bot, chat_id)
+    elif (msg['text'] == 'Restart Emby'
+          and MyGlobals.currentMenu == 'Others'):
+            command_line = str("systemctl restart emby-server")
+            p = Popen(command_line, shell=True, stdin=PIPE,
+                stderr=STDOUT, stdout=PIPE, close_fds=True)
+            output = p.stdout.read()
+            bot.sendMessage(chat_id, output)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id,

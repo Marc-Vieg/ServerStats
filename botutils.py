@@ -34,7 +34,7 @@ def raidstatus():
     p = Popen('cat /proc/mdstat | grep md',
               shell=True, stdin=PIPE, stderr=STDOUT,
               stdout=PIPE, close_fds=True)
-    output = str(p.stdout.read())
+    output = str(p.stdout.read(), 'utf-8')
     return output
 
 
@@ -237,7 +237,7 @@ def getip(bot, chat_id):
     output = p.stdout.read()
     output = output[:-1]
     bot.sendMessage(chat_id, str("Mon IP publique actuelle : "
-                    + str(output)), reply_markup=myKeyboard)
+                    + str(output, 'utf-8')), reply_markup=myKeyboard)
 
 
 def disks():

@@ -55,7 +55,7 @@ def settinggraphichours(bot, chat_id, msg):
                 1 / 0
         except:
             bot.sendMessage(chat_id,
-                            "Please send a proper numeric value below 49 hours")
+                            "Please send a number of hours below 240")
 
 
 def setmem(bot, chat_id, msg):
