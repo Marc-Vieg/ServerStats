@@ -26,7 +26,6 @@ def charges():
     cursor.execute('''SELECT timing, cpu, mem, temp FROM stats''')
     all_rows = cursor.fetchall()
     for row in all_rows:
-        # row[0] returns the first column in the query (name), row[1] returns email column.
         print('timing {0} : cpu {1}, mem {2}, temp {3}'.format(row[0], row[1], row[2], row[3]))
         Datas['timing'].append(row[0])
         Datas['cpu'].append(row[1])
@@ -89,6 +88,11 @@ def getfromDatas(date):
     data = cursor.fetchone()
     return data[1], data[2], data[3]
 
+def getFirstData():
+    cursor = db.cursor()
+    cursor.execute('''SELECT timing FROM stats''')
+    data = cursor.fetchone()
+    return data[0]
 
 
 

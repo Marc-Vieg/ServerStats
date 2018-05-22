@@ -2,6 +2,9 @@
 from telepot.namedtuple import ReplyKeyboardMarkup
 from botglobalvars import MyGlobals
 import botConfig as config
+import botDatas
+import datetime
+import time
 
 submenus = ['settinghoursth', 'setmem',
             'settingmemth', 'setcpu',
@@ -32,6 +35,18 @@ sethoursKeyboard = ReplyKeyboardMarkup(keyboard=[
 
 def setgraphichours(bot, chat_id, msg):
     bot.sendChatAction(chat_id, 'typing')
+    firstDataTiming = botDatas.getFirstData()
+    bot.sendMessage(chat_id,
+            "first data in stats : " +
+            datetime.datetime.fromtimestamp(firstDataTiming).strftime('%c'))
+    time_difference = round(time.time()) - firstDataTiming
+    if time_difference < 60:
+        msg = str(round(time_difference / 60)) + "seconds ago"
+    if time_difference >= 60 and time_difference < 3600:
+        msg = str(round(time_difference / 60)) + " minutes ago"
+    if time_difference >= 3600:
+        msg = str(round(time_difference / 3600)) + " hours ago"
+    bot.sendMessage(chat_id, "it was " + str(msg))
     MyGlobals.currentMenu = 'settinghoursth'
     bot.sendMessage(chat_id,
                     "How many hours to show in graphic ?",
