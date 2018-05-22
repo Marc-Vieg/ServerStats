@@ -29,10 +29,10 @@ A Telegram Bot to watch your server or personal computer.
     
 ***
 
-Example summary: [Gif](http://i.imgur.com/AhCvy9W.gifv)
+![stats](https://github.com/CobayeGunther/ServerStatsBot/blob/master/docs/stats.jpg)
 
-![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/lastHour.jpg)
-![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/last2Hours.jpg)
+![BigGraph](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/lastHour.jpg)
+![BigGraph](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/last2Hours.jpg)
 
 
 
