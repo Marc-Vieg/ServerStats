@@ -4,8 +4,6 @@ BOT UNDER MODIFICATION, FORKED FROM geekbeard/ServerStatsBot
 
 A Telegram Bot to watch your server or personal computer.
 
-## with 3 Menus  
-
 ### Utils 
 	Stats 	-> returns uptime, memory and cpu usage 
     Temp 	-> returns actual temperatures of your processor
