@@ -32,15 +32,6 @@ def charges():
         Datas['cpu'].append(row[1])
         Datas['mem'].append(row[2])
         Datas['temp'].append(row[3])
-    #print(str(Datas))
-    #try:
-        #with open('Datas.json') as f:
-            #Datas = json.load(f)
-            #print("on charges le dataset")
-            #return 1
-    #except:
-        #print("erreur d'ouverture de la db'")
-        #return "err_openfile"
 
 
 def populate():
@@ -73,7 +64,6 @@ def show():
         tDatas['cpu'].append(row[1])
         tDatas['mem'].append(row[2])
         tDatas['temp'].append(row[3])
-        #print(str(tDatas))
     print(str(tDatas))
 
 
@@ -94,9 +84,6 @@ def appendData(cpu, mem, temp):
 
 
 def getfromDatas(date):
-    #return  Datas['cpu'][Datas['timing'].index(date)], \
-             #Datas['mem'][Datas['timing'].index(date)], \
-              #Datas['temp'][Datas['timing'].index(date)]
     cursor = db.cursor()
     cursor.execute('''SELECT timing, cpu, mem, temp FROM stats WHERE timing=?''', (date,))
     data = cursor.fetchone()
@@ -109,53 +96,5 @@ if __name__ == '__main__':
     charges()
     #populate()
     show()
-    print(str(getfromDatas(1521060321)))
 
 
-
-
-
-
-#import json
-#import time
-
-#Datas = dict()
-#Datas['timing'] = []
-#Datas['cpu'] = []
-#Datas['mem'] = []
-#Datas['temp'] = []
-
-
-#def appendData(cpu, mem, temp):
-    #Datas['timing'].append(round(time.time()))
-    #Datas['cpu'].append(round(cpu))
-    #Datas['mem'].append(round(mem))
-    #Datas['temp'].append(round(temp))
-
-
-#def save():
-    #with open('Datas.json', 'w') as f:
-        #try:
-            #json.dump(Datas, f)
-        #except:
-            #print("erreur d ecriture de la db")
-
-
-#def charges():
-    #global Datas
-    #try:
-        #with open('Datas.json') as f:
-            #Datas = json.load(f)
-            #print("on charges le dataset")
-            #return 1
-    #except:
-        #print("erreur d'ouverture de la db'")
-        #return "err_openfile"
-
-
-#def getfromDatas(date):
-    #return  Datas['cpu'][Datas['timing'].index(date)], \
-             #Datas['mem'][Datas['timing'].index(date)], \
-              #Datas['temp'][Datas['timing'].index(date)]
-
-#
