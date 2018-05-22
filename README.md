@@ -33,13 +33,10 @@ A Telegram Bot to watch your server or personal computer.
 
 Example summary: [Gif](http://i.imgur.com/AhCvy9W.gifv)
 
-![Bot](http://i.imgur.com/hXT0drx.png)
+![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/lastHour.jpg)
+![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/last2Hours.jpg)
 
 
-
-Example graph sent by bot: [Gif](http://i.imgur.com/anX7rJR.gifv)
-
-![Graph](http://i.imgur.com/K8mG3aM.jpg?1)
 
 # Usage
 
