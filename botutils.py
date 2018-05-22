@@ -10,6 +10,7 @@ from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
 import botDatas
 import pyspeedtest
+import botConfig as config
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
@@ -19,6 +20,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
 
 
 def logwatch(bot, chat_id):
+    #uses the logwatch binary to send one line at a time the summary
     command = str('logwatch --output stdout --format text |' +
                   'while IFS= read -r line;do telegram-send "$line";done')
     p = Popen(command, shell=True, stdin=PIPE, stderr=STDOUT,
@@ -28,6 +30,7 @@ def logwatch(bot, chat_id):
 
 
 def raidstatus():
+    #send the status of possible raid array
     p = Popen('cat /proc/mdstat | grep md',
               shell=True, stdin=PIPE, stderr=STDOUT,
               stdout=PIPE, close_fds=True)
@@ -36,21 +39,21 @@ def raidstatus():
 
 
 def memgraph(bot, chat_id, value):
+    # preparing stats for the big graph
     graphDatas = dict()
     graphDatas['cpu'] = []
     graphDatas['mem'] = []
     graphDatas['temp'] = []
     graphDatas['time'] = []
     timep = 0
-    # on veut deux heures de grap
-    timeWanted = botDatas.Datas['timing'][-1] - MyGlobals.GraphicHours
+    # get fixed period of stats
+    try:
+        timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
+                            'settings.ini', 'Graph', 'length', 'int')
+    except IndexError:
+        bot.sendMessage(bot, chat_id, "I don't have so much Datas")
     for date in botDatas.Datas['timing']:
-        if (date in range(timeWanted - 10, timeWanted + 10)):
-            #print((date, "is the winner, at pos",
-                #botDatas.Datas['timing'].index(date)))
-            #print(("data timming ",
-                #botDatas.Datas['timing'][botDatas.Datas['timing'].index(date)],
-                #" = ", botDatas.Datas['timing'].index(date)))
+        if (date in range(timeWanted - 100, timeWanted + 100)):
             timep = botDatas.Datas['timing'].index(date)
             break
     if (timep == 0):
@@ -84,6 +87,7 @@ def memgraph(bot, chat_id, value):
 
 
 def plotbiggraph(Datas, xaxis, tmperiod):
+    #plotting stats fo a desired time in the big graph with matplotlib.pyplot
     xaxis = []
     Datas['time'][0] = 0
     xaxis = Datas['time']
@@ -91,18 +95,20 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     plt.ylabel('% Used')
     plt.title('Memory, Cpu and Temperature Usage Graph')
     #mem graph
-    plt.text(0.1 * len(xaxis), MyGlobals.memorythreshold + 2,
-             'Memory Threshold: ' + str(MyGlobals.memorythreshold) + ' %')
+    memorythreshold = config.getConfig('settings.ini', 'Graph', 'memth', 'int')
+    plt.text(0.1 * len(xaxis), memorythreshold + 2,
+             'Memory Threshold: ' + str(memorythreshold) + ' %')
     #usage graph
-    plt.text(0.1 * len(xaxis), MyGlobals.usagethreshold + 2,
-             'Cpu Threshold: ' + str(MyGlobals.usagethreshold) + ' %')
+    usagethreshold = config.getConfig('settings.ini', 'Graph', 'cputh', 'int')
+    plt.text(0.1 * len(xaxis), usagethreshold + 2,
+             'Cpu Threshold: ' + str(usagethreshold) + ' %')
 
     memthresholdarr = []
     usagethresholdarr = []
     for xas in xaxis:
-        memthresholdarr.append(MyGlobals.memorythreshold)
+        memthresholdarr.append(memorythreshold)
     for xas in xaxis:
-        usagethresholdarr.append(MyGlobals.usagethreshold)
+        usagethresholdarr.append(usagethreshold)
     plt.plot(xaxis, memthresholdarr, 'g--',
              xaxis, usagethresholdarr, 'b--')
     #mem
@@ -114,7 +120,6 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     #temp
     Datas['temp'][0] = 0
     plt.plot(xaxis, Datas['temp'], 'r-.', label="°C")
-    #plt.axis([0, j, 0, 100])
     j = 0
     j = xaxis[-1]
     plt.axis('auto')
@@ -129,6 +134,7 @@ def plotbiggraph(Datas, xaxis, tmperiod):
 
 
 def stats(bot, chat_id):
+    #send general stats of the server (cpu usage, memory, disks...)
     print("je suis dans botutils.stats()")
     bot.sendChatAction(chat_id, 'typing')
     memory = psutil.virtual_memory()
@@ -142,6 +148,7 @@ def stats(bot, chat_id):
     memuseperc = "Used memory: " + str(memory.percent) + " %"
     diskused = "Disk used: " + str(disk.percent) + " %"
     cpupercent = "Cpu usage: " + str(psutil.cpu_percent(1)) + " %"
+    network = speedtest()
     pids = psutil.pids()
     pidsreply = ''
     cpusreply = ''
@@ -166,7 +173,6 @@ def stats(bot, chat_id):
         p = psutil.Process(pid)
         try:
             pcpu = p.cpu_percent(interval=0.01) / psutil.cpu_count()
-            print((str(p.name()) + " " + str(pcpu)))
             if pcpu > 0.1:
                 if p.name() in procscpu:
                     procscpu[p.name()] += pcpu
@@ -183,6 +189,7 @@ def stats(bot, chat_id):
             memavail + "\n" + \
             memuseperc + "\n" + \
             diskused + "\n" + \
+            network + "\n" + \
             cpupercent + "\n\n" + \
             pidsreply + "\n " + \
             cpusreply + "\n\n"
@@ -215,6 +222,7 @@ def recupTemp():
 
 
 def gettemp(bot, chat_id):
+    #send actual temperatures of the processor from recupTemp()
     temperatures = recupTemp()
     reply = "Temperatures : \n"
     for core in MyGlobals.myCores:
@@ -223,6 +231,7 @@ def gettemp(bot, chat_id):
 
 
 def getip(bot, chat_id):
+    #curl ifconfig.me returns your external ip
     p = Popen('curl ifconfig.me', shell=True,
                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
     output = p.stdout.read()
@@ -232,6 +241,7 @@ def getip(bot, chat_id):
 
 
 def disks():
+    #returns your disks mountpoint and usages
     print((str("je suis dans " + __name__ + ".disks")))
 #code from pysysbot https://github.com/fabaff/pysysbot
 #thank you fabaff !
@@ -262,8 +272,8 @@ def bytes2human(n):
     return "%sB" % n
 
 
-def speedtest(bot, chat_id):
-    bot.sendChatAction(chat_id, 'typing')
+def speedtest():
+    #return your internet speeds, broken actualy ?
     try:
         st = pyspeedtest.SpeedTest()
         up = bytes2human(round(st.upload() / 8))
@@ -297,7 +307,8 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
     elif msg['text'] == 'speedtest':
-        bot.sendMessage(chat_id, speedtest(bot, chat_id),
+        bot.sendChatAction(chat_id, 'typing')
+        bot.sendMessage(chat_id, speedtest(),
                         reply_markup=myKeyboard)
     elif msg['text'] == '<- RETOUR':
         MyGlobals.currentMenu = 'Main'

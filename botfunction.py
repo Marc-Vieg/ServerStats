@@ -9,6 +9,7 @@ import othersmenu
 import time
 import telepot
 import botDatas
+import botConfig as config
 
 
 def FlushData(bot, chat_id):
@@ -31,8 +32,6 @@ def clearall(chat_id):
         settingmemth.remove(chat_id)
     if chat_id in MyGlobals.setpolling:
         setpolling.remove(chat_id)
-    if chat_id in MyGlobals.settorrenttype:
-        settorrenttype.remove(chat_id)
 
 
 class YourBot(telepot.Bot):
@@ -53,12 +52,15 @@ class YourBot(telepot.Bot):
                     bot.sendMessage(chat_id, "retour au menu principal",
                                     reply_markup=mainKeyboard)
                     MyGlobals.currentMenu = 'Main'
+                #enter settings menu
                 elif ((MyGlobals.currentMenu == 'Settings')
                        or (MyGlobals.currentMenu in settings.submenus)):
                         settings.main(bot, TOKEN, chat_id, msg)
+                #enter others menu
                 elif ((msg['text'] == 'Others')
                        or (MyGlobals.currentMenu == 'Others')):
                     othersmenu.main(bot, chat_id, msg)
+                #enter Utils menu
                 elif ((msg['text'] == "Utils")
                        or (MyGlobals.currentMenu == 'Utils')):
                     botutils.main(bot, TOKEN, chat_id, msg)
@@ -78,14 +80,7 @@ class YourBot(telepot.Bot):
                     if output == b'':
                         bot.sendMessage(chat_id, "y'a un souci",
                                         disable_web_page_preview=True)
-                #I like Fortunes
-                elif msg['text'] == "/fortune":
-                    p = Popen('fortune', shell=True,
-                              stdin=PIPE, stdout=PIPE,
-                              stderr=STDOUT, close_fds=True)
-                    output = p.stdout.read()
-                    bot.sendMessage(chat_id, output, reply_markup=mainKeyboard)
-                #memory % limit for the alerts
+                #enter settings menu
                 elif (msg['text'] == 'Settings'
                       or MyGlobals.currentMenu == 'Settings'):
                     settings.main(bot, TOKEN, chat_id, msg)
@@ -116,7 +111,6 @@ def main():
               + str(len(botDatas.Datas['mem']))
               + "\n temp : "
               + str(len(botDatas.Datas['temp'])))
-        #print(str(botDatas.Datas))
 
     else:
         for adminid in adminchatid:
@@ -125,13 +119,10 @@ def main():
     for adminid in adminchatid:
         bot.sendMessage(adminid, "Demarrage de Main", reply_markup=mainKeyboard)
     tr = 0
-    #xx = 0
-    #xxx = 0
-    #xxtemp = 0
     # Keep the program running.
     while 1:
         if tr == MyGlobals.poll:
-            if MyGlobals.surveillanceActive:
+            if MyGlobals.autoSend:
                 for adminid in adminchatid:
                     bot.sendChatAction(adminid, 'typing')
                     botutils.memgraph(bot, adminid, 'all')
@@ -153,9 +144,9 @@ def main():
             tempMoyenne = somme / z
             botDatas.appendData(usagepercent, mempercent, tempMoyenne)
 
-            ##alerte si memoire faible
-            if (mempercent > MyGlobals.memorythreshold
-                and MyGlobals.alertsEnlabed is True):
+            ##alert if memory is low
+            if ((mempercent > MyGlobals.memorythreshold)
+                                and MyGlobals.sendAlerts):
                 memavail = "Available memory: %.2f GB" \
                            % (memck.available / 1000000000)
                 for adminid in adminchatid:
@@ -163,13 +154,13 @@ def main():
                                     + memavail + '\n' + str(mempercent)
                                     + '% of memory used')
                     botutils.memgraph(bot, adminid, 'all')
-            ##alerte si proc surchargé
-            if (usagepercent > MyGlobals.usagethreshold
-                and MyGlobals.alertsEnlabed is True):
+            ##alert if cpu usage percent is high
+            if ((usagepercent > MyGlobals.usagethreshold)
+                                and MyGlobals.sendAlerts):
                 for adminid in adminchatid:
                     bot.sendMessage(adminid, "CRITICAL! HIGH CPU!\n"
                                     + str(usagepercent) + '% of cpu used')
                     botutils.memgraph(bot, adminid, 'all')
-        botDatas.save()
+        #botDatas.save()
         time.sleep(10)  # 10 seconds
         tr += 10

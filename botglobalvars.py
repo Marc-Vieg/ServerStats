@@ -8,11 +8,13 @@ class MyGlobals(object):
     menu = ['Main', 'Utils', 'Settings']
     currentMenu = ''
 
-    surveillanceActive = False
+    sendAlerts = 0
+    autoSend = 0
+    autoSendTime = 30
     memorythreshold = 60  # If memory usage more this %
     usagethreshold = 70  # If cpu usage is more than this %
     poll = 10  # seconds
-    pollSurv = 30
+
     LISTSMAX = 864000
     #hours to show in grap (can be 0.5 to 30 minutes for example)
     GraphicHours = 3 * 3600
@@ -29,10 +31,8 @@ class MyGlobals(object):
     settingmemth = []
     settingcputh = []
     setpolling = []
-    settorrenttype = []
     graphstart = datetime.now()
     shellexecution = []
-    alertsEnlabed = True
     mainKeyboard = ReplyKeyboardMarkup(keyboard=[
                      ['Utils', 'Settings'],
                      ['Others'],

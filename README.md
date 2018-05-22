@@ -1,60 +1,40 @@
 BOT UNDER MODIFICATION, FORKED FROM geekbeard/ServerStatsBot
 
-# Server Manager Bot
+# Server Stats Bot
 
-A Telegram Bot:
+A Telegram Bot to watch your server or personal computer.
 
-* Menus :
-   primary menu : Utils, Settings, Others
-   
-   * Utils :
-   
-      `Stats` -  gives summed statistics about memory and cpu usage \ disk \ processes (will improve)
-      
-      `BigGraph` - plots a graph of memory, temperatures, and cpu usage from the timeperiod specified in Settings/nd d heures graphique (yeah, some strings are in french, I'll translate strings
-      
-      `logwatch` send logwatch output line by line (telegram limits to 400 chars
-      
-      `temp` - Get Cores temperature (you have to specify the number of cores you have in botglobalvars.py
-      
-      `Raid` - cat /proc/mdstat for who have software raid
-      
-      `Disks` - get disks usages
-      
-      `Ip` - curl ifconfig.me to get your public IP
-      
-      
-   * Settings : 
-      `/setmem` - set memory threshold (%) to monitor and notify if memory usage goes above it
-      
-      `/setpoll` - set polling interval in seconds (higher than 10)
-      
-      `/setcpu` - set cppu threshold (%) to monitor and notify if cpu usage goes above it
-      
-      `Alerts On/Off` - Toggle if alerts will be sent when memeory or cpu usage % is bigger than threshold (on by default)
-      
-      `nd d heures graphique` - toggle the number of past hours to include in yout graphs
-      
-      
-   * Others
-      `Compile LineageOs` - I use it to toggle my buildscript for my lineageos Rom
-      
-      `Status` - only cat the logfile of my buildscript to know what it is doing
-      
-      `Restart Bot` - Restart bot with your personnal start|stop script
-      
+### Utils 
+	Stats 	-> returns uptime, memory and cpu usage 
+    Temp 	-> returns actual temperatures of your processor
+    speedtest -> will test your internet bandwith
+    Big Graph -> will plot you a beautiful graphic of your server's stats (with adjustable time)
+    logwatch -> will send you the [logwatch](https://sourceforge.net/projects/logwatch/)'s report
+	Raid 	-> will give you the status of your Raid Array (content of /proc/mdstats)
+    Disk 	-> your disks mountpoint and usages 
+    IP 		-> Your external IP
+    
+### Settings
+	setmem, setcpu, setpoll -> 	let you choose an alert threshold for usages of you cpu and memory 
+    							or your processor temperature
+    Alerts On/Off 	-> tell the bot to send alerts or not
+    Graph Lenght 	-> choose the maximum time to show in Big Graph (decimal friendly, actualy code limited to 240 hours max)
+
+### Others
+	I use this menu to compile LineageOs update for my phone, it's linked to my build script and his logfile. (Compile LineagOs and Status buttons)
+    
+    Restart Bot to restart the bot
 
 
+    
+***
 
 Example summary: [Gif](http://i.imgur.com/AhCvy9W.gifv)
 
-![Bot](http://i.imgur.com/hXT0drx.png)
+![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/lastHour.jpg)
+![Bot](https://github.com/CobayeGunther/ServerStatsBot/blob/staging/docs/last2Hours.jpg)
 
 
-
-Example graph sent by bot: [Gif](http://i.imgur.com/anX7rJR.gifv)
-
-![Graph](http://i.imgur.com/K8mG3aM.jpg?1)
 
 # Usage
 
@@ -116,3 +96,4 @@ I got the original code from geekbeard/ServerStatsBot and adpted it to my person
  
  
  CG
+
