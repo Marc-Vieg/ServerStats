@@ -20,6 +20,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
 
 
 def logwatch(bot, chat_id):
+    #uses the logwatch binary to send one line at a time the summary
     command = str('logwatch --output stdout --format text |' +
                   'while IFS= read -r line;do telegram-send "$line";done')
     p = Popen(command, shell=True, stdin=PIPE, stderr=STDOUT,
@@ -29,6 +30,7 @@ def logwatch(bot, chat_id):
 
 
 def raidstatus():
+    #send the status of possible raid array
     p = Popen('cat /proc/mdstat | grep md',
               shell=True, stdin=PIPE, stderr=STDOUT,
               stdout=PIPE, close_fds=True)
@@ -37,13 +39,14 @@ def raidstatus():
 
 
 def memgraph(bot, chat_id, value):
+    # preparing stats for the big graph
     graphDatas = dict()
     graphDatas['cpu'] = []
     graphDatas['mem'] = []
     graphDatas['temp'] = []
     graphDatas['time'] = []
     timep = 0
-    # on veut deux heures de grap
+    # get fixed period of stats
     try:
         timeWanted = botDatas.Datas['timing'][-1] - config.getConfig(
                             'settings.ini', 'Graph', 'length', 'int')
@@ -84,6 +87,7 @@ def memgraph(bot, chat_id, value):
 
 
 def plotbiggraph(Datas, xaxis, tmperiod):
+    #plotting stats fo a desired time in the big graph with matplotlib.pyplot
     xaxis = []
     Datas['time'][0] = 0
     xaxis = Datas['time']
@@ -116,7 +120,6 @@ def plotbiggraph(Datas, xaxis, tmperiod):
     #temp
     Datas['temp'][0] = 0
     plt.plot(xaxis, Datas['temp'], 'r-.', label="°C")
-    #plt.axis([0, j, 0, 100])
     j = 0
     j = xaxis[-1]
     plt.axis('auto')
@@ -131,6 +134,7 @@ def plotbiggraph(Datas, xaxis, tmperiod):
 
 
 def stats(bot, chat_id):
+    #send general stats of the server (cpu usage, memory, disks...)
     print("je suis dans botutils.stats()")
     bot.sendChatAction(chat_id, 'typing')
     memory = psutil.virtual_memory()
@@ -169,7 +173,6 @@ def stats(bot, chat_id):
         p = psutil.Process(pid)
         try:
             pcpu = p.cpu_percent(interval=0.01) / psutil.cpu_count()
-            #print((str(p.name()) + " " + str(pcpu)))
             if pcpu > 0.1:
                 if p.name() in procscpu:
                     procscpu[p.name()] += pcpu
@@ -219,6 +222,7 @@ def recupTemp():
 
 
 def gettemp(bot, chat_id):
+    #send actual temperatures of the processor from recupTemp()
     temperatures = recupTemp()
     reply = "Temperatures : \n"
     for core in MyGlobals.myCores:
@@ -227,6 +231,7 @@ def gettemp(bot, chat_id):
 
 
 def getip(bot, chat_id):
+    #curl ifconfig.me returns your external ip
     p = Popen('curl ifconfig.me', shell=True,
                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
     output = p.stdout.read()
@@ -236,6 +241,7 @@ def getip(bot, chat_id):
 
 
 def disks():
+    #returns your disks mountpoint and usages
     print((str("je suis dans " + __name__ + ".disks")))
 #code from pysysbot https://github.com/fabaff/pysysbot
 #thank you fabaff !
@@ -267,6 +273,7 @@ def bytes2human(n):
 
 
 def speedtest():
+    #return your internet speeds, broken actualy ?
     try:
         st = pyspeedtest.SpeedTest()
         up = bytes2human(round(st.upload() / 8))

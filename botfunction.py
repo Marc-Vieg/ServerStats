@@ -12,7 +12,6 @@ import botDatas
 import botConfig as config
 
 
-
 def FlushData(bot, chat_id):
     botDatas.Datas['timing'] = []
     botDatas.Datas['cpu'] = []
@@ -53,12 +52,15 @@ class YourBot(telepot.Bot):
                     bot.sendMessage(chat_id, "retour au menu principal",
                                     reply_markup=mainKeyboard)
                     MyGlobals.currentMenu = 'Main'
+                #enter settings menu
                 elif ((MyGlobals.currentMenu == 'Settings')
                        or (MyGlobals.currentMenu in settings.submenus)):
                         settings.main(bot, TOKEN, chat_id, msg)
+                #enter others menu
                 elif ((msg['text'] == 'Others')
                        or (MyGlobals.currentMenu == 'Others')):
                     othersmenu.main(bot, chat_id, msg)
+                #enter Utils menu
                 elif ((msg['text'] == "Utils")
                        or (MyGlobals.currentMenu == 'Utils')):
                     botutils.main(bot, TOKEN, chat_id, msg)
@@ -78,14 +80,7 @@ class YourBot(telepot.Bot):
                     if output == b'':
                         bot.sendMessage(chat_id, "y'a un souci",
                                         disable_web_page_preview=True)
-                #I like Fortunes
-                elif msg['text'] == "/fortune":
-                    p = Popen('fortune', shell=True,
-                              stdin=PIPE, stdout=PIPE,
-                              stderr=STDOUT, close_fds=True)
-                    output = p.stdout.read()
-                    bot.sendMessage(chat_id, output, reply_markup=mainKeyboard)
-                #memory % limit for the alerts
+                #enter settings menu
                 elif (msg['text'] == 'Settings'
                       or MyGlobals.currentMenu == 'Settings'):
                     settings.main(bot, TOKEN, chat_id, msg)
