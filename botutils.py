@@ -14,7 +14,7 @@ import botConfig as config
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
-    ['Big Graph', 'logwatch'],
+    ['Big Graph', 'Disks Graph', 'logwatch'],
     ['Raid', 'Disks', 'IP'],
     ['<- RETOUR']])
 
@@ -257,6 +257,50 @@ def disks():
                         part.mountpoint)
     return str(disks)
 
+def diskGraph(bot, chat_id):
+    parts = psutil.disk_partitions(all=False)
+# Pie chart, where the slices will be ordered and plotted counter-clockwise:
+    labels = []
+    sizes = []
+    i = 0
+    j = 0
+    ncols = 1
+    nrows = 1
+    while nrows * ncols < len(parts) + 1:
+        if ncols % nrows == 0:
+            nrows = nrows + 1
+        else : ncols = ncols + 1
+    print("nrows = " + str(nrows) + "\nncols = " + str(ncols))
+    fig, ax = plt.subplots(nrows, ncols)
+    for part in parts :
+        labels = []
+        sizes = []
+        usage = psutil.disk_usage(part.mountpoint)
+        labels.append("used : " + bytes2human(usage.used))
+        labels.append("free : " + bytes2human(usage.free))
+        sizes.append(int(usage.percent))
+        sizes.append(100 - int(usage.percent))
+        explode = (0.05,0)  # only "explode" the 1st slice i.e. used
+        ax[i,j].set_title(part.mountpoint, weight='bold', size='medium', position=(0.5, 1.1),
+                     horizontalalignment='center', verticalalignment='center')
+        ax[i,j].pie(sizes, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90, explode=explode)
+        ax[i,j].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        if i == ncols - 1 :
+            i = 0
+            j = j + 1
+        else :
+            i = i + 1
+    while i < nrows :
+        ax[i, j].set_visible(False)
+        i = i + 1
+    fig.subplots_adjust(hspace=0.3)
+    plt.savefig('/tmp/diskGraph.png')
+    plt.show()
+    plt.close()
+    f = open('/tmp/diskGraph.png', 'rb')  # some file on local disk
+    bot.sendPhoto(chat_id, f)
+
 
 def bytes2human(n):
 # Credits: http://code.activestate.com/recipes/578019
@@ -306,6 +350,8 @@ def main(bot, TOKEN, chat_id, msg):
         bot.sendMessage(chat_id, raidstatus(), reply_markup=myKeyboard)
     elif msg['text'] == 'Disks':
         bot.sendMessage(chat_id, disks(), reply_markup=myKeyboard)
+    elif msg['text'] == 'Disks Graph':
+        diskGraph(bot, chat_id)
     elif msg['text'] == 'speedtest':
         bot.sendChatAction(chat_id, 'typing')
         bot.sendMessage(chat_id, speedtest(),
