@@ -11,6 +11,7 @@ from botglobalvars import MyGlobals
 import botDatas
 import pyspeedtest
 import botConfig as config
+import math
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
@@ -295,9 +296,11 @@ def diskGraph(bot, chat_id):
     j=0
     k=0
     while k < ncols*nrows:
-        print("title = " + ax[i,j].get_title())
-        if not ax[i,j].get_title():
-            ax[i, j].set_visible(False)
+        try:
+            if not ax[i,j].get_title():
+                ax[i,j].set_visible(False)
+        except :
+            print("error when blanking empty graphs")
         if i == ncols - 1 :
             i = 0
             j = j + 1
