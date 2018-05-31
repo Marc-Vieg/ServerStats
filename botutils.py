@@ -301,6 +301,7 @@ def diskGraph(bot, chat_id):
                 ax[i,j].set_visible(False)
         except :
             print("error when blanking empty graphs")
+            i = i + 1
         if i == ncols - 1 :
             i = 0
             j = j + 1
