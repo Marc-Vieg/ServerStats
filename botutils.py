@@ -291,9 +291,9 @@ def diskGraph(bot, chat_id):
             j = j + 1
         else :
             i = i + 1
-    while i < nrows :
-        ax[i, j].set_visible(False)
-        i = i + 1
+    #while i < nrows :
+        #ax[i, j].set_visible(False)
+        #i = i + 1
     fig.subplots_adjust(hspace=0.3)
     plt.savefig('/tmp/diskGraph.png')
     plt.show()
