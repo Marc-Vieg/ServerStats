@@ -9,11 +9,6 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 startupScript = '/usr/sbin/serverstatsbot.sh'
 
-    #myKeyboard = ReplyKeyboardMarkup(keyboard=[
-        #['Compile LineageOs'],
-        #['Status', 'Restart Bot'],
-        #['Restart Emby'],
-        #['<- Back']])
 
 def createKb():
     print("create kb")

@@ -10,6 +10,7 @@ import time
 import telepot
 import botDatas
 import botConfig as config
+import pihole
 
 
 def FlushData(bot, chat_id):
@@ -21,7 +22,7 @@ def FlushData(bot, chat_id):
 
 
 stopmarkup = {'keyboard': [['Stop']]}
-mainKeyboard = MyGlobals.mainKeyboard
+mainKeyboard = MyGlobals.createKb()
 hide_keyboard = {'hide_keyboard': True}
 
 
@@ -84,6 +85,9 @@ class YourBot(telepot.Bot):
                 elif (msg['text'] == 'Settings'
                       or MyGlobals.currentMenu == 'Settings'):
                     settings.main(bot, TOKEN, chat_id, msg)
+
+                elif msg['text'] == "PiHole":
+                    bot.sendMessage(chat_id, pihole.get_summary())
                 elif chat_id in MyGlobals.shellexecution:
                     bot.sendChatAction(chat_id, 'typing')
                     bot.sendMessage(chat_id, "voila",

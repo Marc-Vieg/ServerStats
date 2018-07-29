@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from telepot.namedtuple import ReplyKeyboardMarkup
+import botConfig as config
 
 
 class MyGlobals(object):
@@ -15,6 +16,7 @@ class MyGlobals(object):
     usagethreshold = 70  # If cpu usage is more than this %
     poll = 10  # seconds
     isEmbyPresent = 0
+    isPiholePresent = 0
 
     LISTSMAX = 864000
     #hours to show in grap (can be 0.5 to 30 minutes for example)
@@ -34,10 +36,16 @@ class MyGlobals(object):
     setpolling = []
     graphstart = datetime.now()
     shellexecution = []
-    mainKeyboard = ReplyKeyboardMarkup(keyboard=[
-                     ['Utils', 'Settings'],
-                     ['Others'],
-                     ['/who']])
     myCores = ['Core 0', 'Core 1']
 
-
+    def createKb():
+        print("create kb")
+        keyboard=[['Utils', 'Settings'],
+                 ['Others', '/who']]
+        keyboardrow = []
+        if config.getConfig('settings.ini', 'Bot', 'isPiholePresent', 'bool'):
+            print("pihole present")
+            keyboardrow.append('PiHole')
+            keyboard.append(keyboardrow)
+        myKeyboard = ReplyKeyboardMarkup(keyboard=keyboard)
+        return myKeyboard

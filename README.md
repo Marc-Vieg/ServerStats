@@ -87,6 +87,7 @@ I will reimplement this differently later.
  
 # PLEASE CONTRIBUTE :)
 I got the original code from geekbeard/ServerStatsBot and adpted it to my personnal usage, please feel free to thank him and fork your own version !
+pihole work in progress thanks to mnk400/pihole-info
  
  
 # Other bot development
