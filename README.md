@@ -1,4 +1,3 @@
-BOT UNDER MODIFICATION, FORKED FROM geekbeard/ServerStatsBot
 
 # Server Stats Bot
 
@@ -86,7 +85,7 @@ I will reimplement this differently later.
         
  
 # PLEASE CONTRIBUTE :)
-I got the original code from geekbeard/ServerStatsBot and adpted it to my personnal usage, please feel free to thank him and fork your own version !
+I got the original code from [geekbeard/ServerStatsBot](https://github.com/geekbeard/ServerStatsBot) and adpted it to my personnal usage, please feel free to thank him and fork your own version !
  
  
 # Other bot development
