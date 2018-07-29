@@ -15,7 +15,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['setmem', 'setcpu'],
     ['setpoll', 'Alerts On/Off'],
     ['Graph Length'],
-    ['<- RETOUR']])
+    ['<- Back']])
 
 setKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['70', '80'],
@@ -204,7 +204,7 @@ def main(bot, TOKEN, chat_id, msg):
         settinggraphichours(bot, chat_id, msg)
     elif msg['text'] == 'Alerts On/Off':
         Alerts(bot, chat_id)
-    elif msg['text'] == '<- RETOUR':
+    elif msg['text'] == '<- Back':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id,
                         "Back to menu",

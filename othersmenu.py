@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from telepot.namedtuple import ReplyKeyboardMarkup
+from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton
 from botglobalvars import MyGlobals
 import botConfig as config
 import os
@@ -9,11 +9,24 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 startupScript = '/usr/sbin/serverstatsbot.sh'
 
-myKeyboard = ReplyKeyboardMarkup(keyboard=[
-    ['Compile LineageOs'],
-    ['Status', 'Restart Bot'],
-    ['Restart Emby'],
-    ['<- RETOUR']])
+    #myKeyboard = ReplyKeyboardMarkup(keyboard=[
+        #['Compile LineageOs'],
+        #['Status', 'Restart Bot'],
+        #['Restart Emby'],
+        #['<- Back']])
+
+def createKb():
+    print("create kb")
+    keyboard=[['Compile LineageOs'],
+            ['Status', 'Restart Bot']]
+    keyboardrow = []
+    if config.getConfig('settings.ini', 'Bot', 'isEmbyPresent', 'bool'):
+        print("emby present")
+        keyboardrow.append('Restart Emby')
+    keyboardrow.append('<- Back')
+    keyboard.append(keyboardrow)
+    myKeyboard = ReplyKeyboardMarkup(keyboard=keyboard)
+    return myKeyboard
 
 
  #Done : auto set send alert Off when starting the build
@@ -58,7 +71,7 @@ def main(bot, chat_id, msg):
     print((str("je suis dans " + __name__)))
     if msg['text'] == 'Others':
         bot.sendMessage(chat_id, str("fonctionalités diverses "),
-                        reply_markup=myKeyboard)
+                        reply_markup=createKb())
         MyGlobals.currentMenu = 'Others'
     if (msg['text'] == 'Restart Bot'
         and MyGlobals.currentMenu == 'Others'):
@@ -87,7 +100,7 @@ def main(bot, chat_id, msg):
                 stderr=STDOUT, stdout=PIPE, close_fds=True)
             output = p.stdout.read()
             bot.sendMessage(chat_id, output)
-    elif msg['text'] == '<- RETOUR':
+    elif msg['text'] == '<- Back':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id,
                         "retour au menu principal",

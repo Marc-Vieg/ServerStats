@@ -14,6 +14,7 @@ class MyGlobals(object):
     memorythreshold = 60  # If memory usage more this %
     usagethreshold = 70  # If cpu usage is more than this %
     poll = 10  # seconds
+    isEmbyPresent = 0
 
     LISTSMAX = 864000
     #hours to show in grap (can be 0.5 to 30 minutes for example)

@@ -14,6 +14,8 @@ def loadSettings(path):
     MyGlobals.usagethreshold = getConfig(path, 'Graph', 'cputh', 'int')
     MyGlobals.GraphicHours = getConfig(path, 'Graph', 'length', 'int')
     MyGlobals.poll = getConfig(path, 'Bot', 'poll', 'int')
+    MyGlobals.isEmbyPresent = getConfig(path, 'Bot', 'isEmbyPresent', 'bool')
+    MyGlobals.isPiholePresent = getConfig(path, 'Bot', 'isPiholePresent', 'bool')
     print("settings loaded", MyGlobals.sendAlerts)
 
 
@@ -50,7 +52,9 @@ def createConfig(path):
     }
     config['Alerts'] = alertSection
     botSection = {
-        'poll': 10
+        'poll': 10,
+        'isEmbyPresent': 0,
+        'isPiholePresent': 0
     }
     config['Bot'] = botSection
 
@@ -64,7 +68,7 @@ def getConfig(path, section, option, type):
     elif type == 'int':
         return config[section].as_int(option)
     elif type == 'bool':
-        #print('bool : ', section, option, config[section].as_bool(option))
+        print('bool : ', section, option, config[section].as_bool(option))
         result = config[section].as_bool(option)
         if result:
             return 1

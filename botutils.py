@@ -17,7 +17,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
     ['Big Graph', 'Disks Graph', 'logwatch'],
     ['Raid', 'Disks', 'IP'],
-    ['<- RETOUR']])
+    ['<- Back']])
 
 
 def logwatch(bot, chat_id):
@@ -371,7 +371,7 @@ def main(bot, TOKEN, chat_id, msg):
         bot.sendChatAction(chat_id, 'typing')
         bot.sendMessage(chat_id, speedtest(),
                         reply_markup=myKeyboard)
-    elif msg['text'] == '<- RETOUR':
+    elif msg['text'] == '<- Back':
         MyGlobals.currentMenu = 'Main'
         bot.sendMessage(chat_id, "retour au menu principal",
                         reply_markup=MyGlobals.mainKeyboard)

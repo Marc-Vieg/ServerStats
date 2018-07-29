@@ -48,7 +48,7 @@ class YourBot(telepot.Bot):
         if chat_id in adminchatid:  # Store adminchatid variable in tokens.py
             #Text messages
             if content_type == 'text':
-                if msg['text'] == '<- RETOUR':
+                if msg['text'] == '<- Back':
                     bot.sendMessage(chat_id, "retour au menu principal",
                                     reply_markup=mainKeyboard)
                     MyGlobals.currentMenu = 'Main'
@@ -88,7 +88,7 @@ class YourBot(telepot.Bot):
                     bot.sendChatAction(chat_id, 'typing')
                     bot.sendMessage(chat_id, "voila",
                                     disable_web_page_preview=True)
-                elif msg['text'] == '<- RETOUR':
+                elif msg['text'] == '<- Back':
                     bot.sendMessage(chat_id, "retour au menu principal",
                                     reply_markup=mainKeyboard)
 
