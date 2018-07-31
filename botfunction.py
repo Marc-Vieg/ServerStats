@@ -58,8 +58,10 @@ class YourBot(telepot.Bot):
                        or (MyGlobals.currentMenu in settings.submenus)):
                         settings.main(bot, TOKEN, chat_id, msg)
                 #enter others menu
-                elif ((msg['text'] == 'Others')
-                       or (MyGlobals.currentMenu == 'Others')):
+                elif ((msg['text'] == 'Others' and
+                            config.getConfig('settings.ini', 'Bot', 'othersMenu', 'bool'))
+                       or (MyGlobals.currentMenu == 'Others' and
+                            config.getConfig('settings.ini', 'Bot', 'othersMenu', 'bool'))):
                     othersmenu.main(bot, chat_id, msg)
                 #enter Utils menu
                 elif ((msg['text'] == "Utils")
@@ -86,8 +88,9 @@ class YourBot(telepot.Bot):
                       or MyGlobals.currentMenu == 'Settings'):
                     settings.main(bot, TOKEN, chat_id, msg)
 
-                elif msg['text'] == "PiHole":
-                    bot.sendMessage(chat_id, pihole.get_summary())
+                elif ((msg['text'] == "PiHole")
+                    or (MyGlobals.currentMenu == 'pihole')):
+                    pihole.main(bot, chat_id, msg)
                 elif chat_id in MyGlobals.shellexecution:
                     bot.sendChatAction(chat_id, 'typing')
                     bot.sendMessage(chat_id, "voila",

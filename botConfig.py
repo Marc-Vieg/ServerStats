@@ -16,6 +16,7 @@ def loadSettings(path):
     MyGlobals.poll = getConfig(path, 'Bot', 'poll', 'int')
     MyGlobals.isEmbyPresent = getConfig(path, 'Bot', 'isEmbyPresent', 'bool')
     MyGlobals.isPiholePresent = getConfig(path, 'Bot', 'isPiholePresent', 'bool')
+    MyGlobals.isPiholePresent = getConfig(path, 'Bot', 'othersMenu', 'bool')
     print("settings loaded", MyGlobals.sendAlerts)
 
 
@@ -54,7 +55,8 @@ def createConfig(path):
     botSection = {
         'poll': 10,
         'isEmbyPresent': 0,
-        'isPiholePresent': 0
+        'isPiholePresent': 0,
+        'othersMenu' : 0
     }
     config['Bot'] = botSection
 

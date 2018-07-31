@@ -41,11 +41,14 @@ class MyGlobals(object):
     def createKb():
         print("create kb")
         keyboard=[['Utils', 'Settings'],
-                 ['Others', '/who']]
+                 ['/who']]
         keyboardrow = []
+        if config.getConfig('settings.ini', 'Bot', 'othersMenu', 'bool'):
+            print("othersMenu Activated")
+            keyboardrow.append('Others')
         if config.getConfig('settings.ini', 'Bot', 'isPiholePresent', 'bool'):
             print("pihole present")
             keyboardrow.append('PiHole')
-            keyboard.append(keyboardrow)
+        keyboard.append(keyboardrow)
         myKeyboard = ReplyKeyboardMarkup(keyboard=keyboard)
         return myKeyboard

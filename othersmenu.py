@@ -12,8 +12,8 @@ startupScript = '/usr/sbin/serverstatsbot.sh'
 
 def createKb():
     print("create kb")
-    keyboard=[['Compile LineageOs'],
-            ['Status', 'Restart Bot']]
+    keyboard=[['Restart Bot'],
+            ['Status', 'Compile LineageOs']]
     keyboardrow = []
     if config.getConfig('settings.ini', 'Bot', 'isEmbyPresent', 'bool'):
         print("emby present")
