@@ -4,12 +4,20 @@ import time
 import os
 if __name__ != "__main__":
     from urllib.request import urlopen
+from telepot.namedtuple import ReplyKeyboardMarkup
+from botglobalvars import MyGlobals
 
 url = "http://pi.hole/admin"
 
 status_check = "%s/api.php?status" % url
 
 summary_today = "%s/api.php?summary" % url
+
+myKeyboard = ReplyKeyboardMarkup(keyboard=[
+    ['Stats'],
+    ['<- Back']])
+
+
 
 
 def nativejson(data):
@@ -23,7 +31,7 @@ def request(input_url, method='GET'):
 
 def check_status():
     response = request(status_check)
-    return response['status']
+    return 'PiHole is ' + response['status']
 
 
 def get_summary():
@@ -36,8 +44,18 @@ def get_summary():
     return summary
 
 
-if __name__ == "__main__":
-    from urllib2 import urlopen
-    response = request(summary_today)
-    print(response)
-    get_summary()
+def main(bot, chat_id, msg):
+    print((str("je suis dans " + __name__)))
+    MyGlobals.currentMenu = 'pihole'
+    if msg['text'] == 'PiHole':
+        bot.sendMessage(chat_id, "Pi Hole :", reply_markup=myKeyboard)
+    #if (msg['text'] == 'Status'
+        #and MyGlobals.currentMenu == 'pihole'):
+        #bot.sendMessage(chat_id, check_status(), reply_markup=myKeyboard)
+    if (msg['text'] == 'Stats'
+        and MyGlobals.currentMenu == 'pihole'):
+        bot.sendMessage(chat_id, get_summary(), reply_markup=myKeyboard)
+    elif msg['text'] == '<- Back':
+        MyGlobals.currentMenu = 'Main'
+        bot.sendMessage(chat_id, "Main Menu :",
+                        reply_markup=MyGlobals.mainKeyboard)
