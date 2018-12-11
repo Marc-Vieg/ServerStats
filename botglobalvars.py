@@ -28,6 +28,7 @@ class MyGlobals(object):
     Datas['mem'] = []
     Datas['temp'] = []
 
+    MyIp = '0'
     xaxis = []
     xaxiscpu = []
     xaxistemp = []

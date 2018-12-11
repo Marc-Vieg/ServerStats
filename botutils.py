@@ -12,12 +12,31 @@ import botDatas
 import pyspeedtest
 import botConfig as config
 import math
+import time
 
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
     ['Big Graph', 'Disks Graph', 'logwatch'],
     ['Raid', 'Disks', 'IP'],
     ['<- Back']])
+
+
+def ipCheck(bot, chat_id, MyIp, LastCheck):
+    if MyIp == '0':
+        MyGlobals.MyIp = getip(bot, chat_id)
+    if round(time.time()) - LastCheck > 10:
+        try:
+            actualIP = getip(bot, chat_id)
+        except:
+            print("no internet, no ip")
+            return 1
+        if MyGlobals.MyIp != actualIP:
+            try:
+                bot.sendMessage(chat_id, "My IP changed ! call me baby : " + str(actualIP, 'utf-8'))
+                MyGlobals.MyIp = actualIP
+                print(str(actualIP, 'utf-8') + " : " + str(MyGlobals.MyIp, 'utf-8'))
+            except:
+                print("no internet, no telegram")
 
 
 def logwatch(bot, chat_id):
@@ -237,8 +256,8 @@ def getip(bot, chat_id):
                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
     output = p.stdout.read()
     #output = output[:-1]
-    bot.sendMessage(chat_id, str("Mon IP publique actuelle : "
-                    + str(output, 'utf-8')), reply_markup=myKeyboard)
+
+    return output
 
 
 def disks():
@@ -356,7 +375,9 @@ def main(bot, TOKEN, chat_id, msg):
     elif msg['text'] == 'Big Graph':
         memgraph(bot, chat_id, 'all')
     elif msg['text'] == 'IP':
-        getip(bot, chat_id)
+        bot.sendMessage(chat_id, str("My Pulic IPv4 : "
+                    + str(getip(bot, chat_id), 'utf-8')), reply_markup=myKeyboard)
+
     elif msg['text'] == 'temp':
         gettemp(bot, chat_id)
     elif msg['text'] == 'logwatch':

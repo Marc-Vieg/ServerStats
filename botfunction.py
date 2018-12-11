@@ -18,7 +18,7 @@ def FlushData(bot, chat_id):
     botDatas.Datas['cpu'] = []
     botDatas.Datas['mem'] = []
     botDatas.Datas['temp'] = []
-    bot.sendMessage(chat_id, "datas nettoyées")
+    bot.sendMessage(chat_id, "I'll forget this !")
 
 
 stopmarkup = {'keyboard': [['Stop']]}
@@ -50,7 +50,7 @@ class YourBot(telepot.Bot):
             #Text messages
             if content_type == 'text':
                 if msg['text'] == '<- Back':
-                    bot.sendMessage(chat_id, "retour au menu principal",
+                    bot.sendMessage(chat_id, "main menu",
                                     reply_markup=mainKeyboard)
                     MyGlobals.currentMenu = 'Main'
                 #enter settings menu
@@ -96,7 +96,7 @@ class YourBot(telepot.Bot):
                     bot.sendMessage(chat_id, "voila",
                                     disable_web_page_preview=True)
                 elif msg['text'] == '<- Back':
-                    bot.sendMessage(chat_id, "retour au menu principal",
+                    bot.sendMessage(chat_id, "main menu",
                                     reply_markup=mainKeyboard)
 
 
@@ -108,7 +108,7 @@ bot.message_loop()
 def main():
     if botDatas.charges():
         for adminid in adminchatid:
-            bot.sendMessage(adminid, "dataset Chargé !")
+            bot.sendMessage(adminid, "I remember  !")
         print("dataset chargé")
         print("controle : \n timing : "
               + str(len(botDatas.Datas['timing']))
@@ -121,10 +121,13 @@ def main():
 
     else:
         for adminid in adminchatid:
-            bot.sendMessage(adminid, "erreur de chargement du dataset")
+            bot.sendMessage(adminid, "I forgot everything...")
     MyGlobals.currentMenu = 'Main'
+    #initiate IP surveillance
+    lastIpCheck = round(time.time())
+    botutils.ipCheck(bot, adminid, '0', lastIpCheck)
     for adminid in adminchatid:
-        bot.sendMessage(adminid, "Demarrage de Main", reply_markup=mainKeyboard)
+        bot.sendMessage(adminid, "Hello !", reply_markup=mainKeyboard)
     tr = 0
     # Keep the program running.
     while 1:
@@ -169,5 +172,7 @@ def main():
                                     + str(usagepercent) + '% of cpu used')
                     botutils.memgraph(bot, adminid, 'all')
         #botDatas.save()
+        #check IP adress for those who have dynamic IP
+        botutils.ipCheck(bot, adminid, MyGlobals.MyIp, lastIpCheck)
         time.sleep(10)  # 10 seconds
         tr += 10
