@@ -235,7 +235,7 @@ def getip(bot, chat_id):
     p = Popen('curl ifconfig.me', shell=True,
                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
     output = p.stdout.read()
-    output = output[:-1]
+    #output = output[:-1]
     bot.sendMessage(chat_id, str("Mon IP publique actuelle : "
                     + str(output, 'utf-8')), reply_markup=myKeyboard)
 
