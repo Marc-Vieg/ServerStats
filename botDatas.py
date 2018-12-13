@@ -25,12 +25,12 @@ def charges():
     cursor = db.cursor()
     cursor.execute('''SELECT timing, cpu, mem, temp FROM stats''')
     all_rows = cursor.fetchall()
-    #for row in all_rows:
+    for row in all_rows:
         #print('timing {0} : cpu {1}, mem {2}, temp {3}'.format(row[0], row[1], row[2], row[3]))
-        #Datas['timing'].append(row[0])
-        #Datas['cpu'].append(row[1])
-        #Datas['mem'].append(row[2])
-        #Datas['temp'].append(row[3])
+        Datas['timing'].append(row[0])
+        Datas['cpu'].append(row[1])
+        Datas['mem'].append(row[2])
+        Datas['temp'].append(row[3])
 
 
 def populate():
