@@ -106,7 +106,7 @@ bot.message_loop()
 
 
 def main():
-    if botDatas.charges():
+    if botDatas.charges() != 0:
         for adminid in adminchatid:
             bot.sendMessage(adminid, "I remember  !")
         print("dataset chargé")
