@@ -347,7 +347,7 @@ def bytes2human(n):
     for s in reversed(symbols):
         if n >= prefix[s]:
             value = float(n) / prefix[s]
-            return '%.1f%s' % (value, s)
+            return '%.1f% s' % (value, s)
     return "%sB" % n
 
 
@@ -355,14 +355,18 @@ def speedtest():
     #return your internet speeds, broken actualy ?
     try:
         st = pyspeedtest.SpeedTest()
-        up = bytes2human(round(st.upload() / 8))
-        down = bytes2human(round(st.download() / 8))
+        up = bytes2human(round(st.upload()))
+        down = bytes2human(round(st.download()))
         ping = round(st.ping())
     except:
-        return str("Oops")
-    return str("Up : " + str(up) +
-            "\nDown : " + str(down) +
-            "\nPing : " + str(ping))
+        #pyspeedtest module not working, using command.
+        p = Popen("pyspeedtest", shell=True, stdin=PIPE,
+            stderr=STDOUT, stdout=PIPE, close_fds=True)
+        output = p.stdout.read()
+        return str(output)
+    return str("Up : " + str(up) + "bps" +
+            "\nDown : " + str(down) + "bps" +
+            "\nPing : " + str(ping)) + " ms"
 
 
 def main(bot, TOKEN, chat_id, msg):
