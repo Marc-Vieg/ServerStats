@@ -51,6 +51,8 @@ Example summary: [Gif](http://i.imgur.com/AhCvy9W.gifv)
         * Also Stackoverflow question about that [here](http://stackoverflow.com/questions/11268501/how-to-use-pip-with-python-3-x-alongside-python-2-x)
 * [matplotlib](http://matplotlib.org/)
     * `sudo apt-get install python3-matplotlib`
+* [speedtest-cli](https://github.com/sivel/speedtest-cli)
+    * `sudo pip install speedtest-cli`
 * Bot key & `tokens.py`
     * Hide all the keys and admin variables in `tokens.py`. Use it only for sensitive variables. Avoid creating functions not to clutter the namespaces through the import.
     * Get a key from the [Bot Father](https://telegram.me/BotFather)
