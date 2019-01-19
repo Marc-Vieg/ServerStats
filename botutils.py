@@ -360,7 +360,7 @@ def speedtest():
         ping = round(st.ping())
     except:
         #pyspeedtest module not working, using command.
-        p = Popen("pyspeedtest -c c.speedtest.net", shell=True, stdin=PIPE,
+        p = Popen("pyspeedtest -s c.speedtest.net", shell=True, stdin=PIPE,
             stderr=STDOUT, stdout=PIPE, close_fds=True)
         output = p.stdout.read()
         return str(output)
