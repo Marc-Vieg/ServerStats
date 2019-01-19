@@ -24,7 +24,7 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
 def ipCheck(bot, chat_id, MyIp, LastCheck):
     if MyIp == '0':
         MyGlobals.MyIp = getip(bot, chat_id)
-    if round(time.time()) - LastCheck > 10:
+    if round(time.time()) - LastCheck > 12000:
         try:
             actualIP = getip(bot, chat_id)
         except:
@@ -32,7 +32,7 @@ def ipCheck(bot, chat_id, MyIp, LastCheck):
             return 1
         if MyGlobals.MyIp != actualIP:
             try:
-                bot.sendMessage(chat_id, "My IP changed ! call me baby : " + str(actualIP, 'utf-8'))
+                bot.sendMessage(chat_id, "My IP changed :\n" + str(actualIP, 'utf-8'))
                 MyGlobals.MyIp = actualIP
                 print(str(actualIP, 'utf-8') + " : " + str(MyGlobals.MyIp, 'utf-8'))
             except:
