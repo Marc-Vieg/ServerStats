@@ -9,7 +9,7 @@ from telepot.namedtuple import ReplyKeyboardMarkup
 from subprocess import Popen, PIPE, STDOUT
 from botglobalvars import MyGlobals
 import botDatas
-import pyspeedtest
+import speedtest
 import botConfig as config
 import math
 import time
@@ -351,22 +351,23 @@ def bytes2human(n):
     return "%sB" % n
 
 
-def speedtest():
+def testspeed():
     #return your internet speeds, broken actualy ?
-    try:
-        st = pyspeedtest.SpeedTest()
-        up = bytes2human(round(st.upload()))
-        down = bytes2human(round(st.download()))
-        ping = round(st.ping())
-    except:
+    #try:
+    st = speedtest.Speedtest()
+    st.get_best_server()
+    up = bytes2human(round(st.upload()))
+    down = bytes2human(round(st.download()))
+        #ping = round(st.ping())
+    #except:
         #pyspeedtest module not working, using command.
-        p = Popen("pyspeedtest -s c.speedtest.net", shell=True, stdin=PIPE,
-            stderr=STDOUT, stdout=PIPE, close_fds=True)
-        output = p.stdout.read()
-        return str(output)
+        #p = Popen("pyspeedtest -s c.speedtest.net", shell=True, stdin=PIPE,
+            #stderr=STDOUT, stdout=PIPE, close_fds=True)
+        #output = p.stdout.read()
+    #return str(output)
     return str("Up : " + str(up) + "bps" +
-            "\nDown : " + str(down) + "bps" +
-            "\nPing : " + str(ping)) + " ms"
+            "\nDown : " + str(down) + "bps")
+            #"\nPing : " + str(ping)) + " ms"
 
 
 def main(bot, TOKEN, chat_id, msg):
@@ -395,7 +396,7 @@ def main(bot, TOKEN, chat_id, msg):
         diskGraph(bot, chat_id)
     elif msg['text'] == 'speedtest':
         bot.sendChatAction(chat_id, 'typing')
-        bot.sendMessage(chat_id, speedtest(),
+        bot.sendMessage(chat_id, testspeed(),
                         reply_markup=myKeyboard)
     elif msg['text'] == '<- Back':
         MyGlobals.currentMenu = 'Main'
