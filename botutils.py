@@ -39,6 +39,7 @@ def ipCheck(bot, chat_id, MyIp, LastCheck):
                 print("no internet, no telegram")
 
 
+
 def logwatch(bot, chat_id):
     #uses the logwatch binary to send one line at a time the summary
     command = str('logwatch --output stdout --format text |' +
