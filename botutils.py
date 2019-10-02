@@ -210,7 +210,7 @@ def stats(bot, chat_id):
             memavail + "\n" + \
             memuseperc + "\n" + \
             diskused + "\n" + \
-            #network + "\n" + \
+            #network + "\n" + 
             cpupercent + "\n\n" + \
             pidsreply + "\n " + \
             cpusreply + "\n\n"
