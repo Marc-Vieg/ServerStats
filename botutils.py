@@ -169,7 +169,7 @@ def stats(bot, chat_id):
     memuseperc = "Used memory: " + str(memory.percent) + " %"
     diskused = "Disk used: " + str(disk.percent) + " %"
     cpupercent = "Cpu usage: " + str(psutil.cpu_percent(1)) + " %"
-    network = speedtest()
+    network = testspeed()
     pids = psutil.pids()
     pidsreply = ''
     cpusreply = ''

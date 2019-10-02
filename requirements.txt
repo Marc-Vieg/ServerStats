@@ -1,0 +1,7 @@
+matplotlib
+numpy
+psutil
+telepot
+pyspeedtest
+configobj
+
