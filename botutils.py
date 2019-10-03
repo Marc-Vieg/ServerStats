@@ -14,6 +14,10 @@ import botConfig as config
 import math
 import time
 
+import ipaddress
+import sys
+
+
 myKeyboard = ReplyKeyboardMarkup(keyboard=[
     ['stats', 'temp', 'speedtest'],
     ['Big Graph', 'Disks Graph', 'logwatch'],
@@ -24,11 +28,16 @@ myKeyboard = ReplyKeyboardMarkup(keyboard=[
 def ipCheck(bot, chat_id, MyIp, LastCheck):
     if MyIp == '0':
         MyGlobals.MyIp = getip(bot, chat_id)
-    if round(time.time()) - LastCheck > 12000:
+    if round(time.time()) - LastCheck > 600:
         try:
             actualIP = getip(bot, chat_id)
         except:
             print("no internet, no ip")
+            return 1
+        try:
+            ip = ipaddress.ip_address(actualIP)
+        except:
+            print("not a valid ipv4")
             return 1
         if MyGlobals.MyIp != actualIP:
             try:
