@@ -36,7 +36,7 @@ def get_devices():
     m = 'Top devices : \n\n'
     for name, nb in pihole.top_devices.items():
         name, address = name.split('|')
-        m += f"{name} ({address}) : {nb}\n"
+        m += "{0} ({1}) : {2}\n".format(name, address, nb)
     return m
     
 def update_format():
