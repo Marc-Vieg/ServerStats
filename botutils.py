@@ -379,7 +379,7 @@ def testspeed():
 
 
 def main(bot, TOKEN, chat_id, msg):
-    print((str("je suis dans " + __name__)))
+    print((str( __name__)))
     MyGlobals.currentMenu = 'Utils'
     if msg['text'] == 'Utils':
         bot.sendMessage(chat_id, str("Utilitaires"), reply_markup=myKeyboard)
