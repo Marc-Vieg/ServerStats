@@ -4,4 +4,4 @@ psutil
 telepot
 pyspeedtest
 configobj
-
+PiHole-api

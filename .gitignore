@@ -10,3 +10,8 @@ tokens.pyc
 settings.ini
 datas
 serverstats.nja
+.anjuta/
+botfunction.py~ 
+piholemenu.py~ 
+pihole.py~ 
+requirements.txt~

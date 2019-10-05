@@ -10,7 +10,7 @@ import time
 import telepot
 import botDatas
 import botConfig as config
-import pihole
+import piholemenu
 
 
 def FlushData(bot, chat_id):
@@ -90,7 +90,7 @@ class YourBot(telepot.Bot):
 
                 elif ((msg['text'] == "PiHole")
                     or (MyGlobals.currentMenu == 'pihole')):
-                    pihole.main(bot, chat_id, msg)
+                    piholemenu.main(bot, chat_id, msg)
                 elif chat_id in MyGlobals.shellexecution:
                     bot.sendChatAction(chat_id, 'typing')
                     bot.sendMessage(chat_id, "voila",
