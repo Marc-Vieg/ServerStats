@@ -1,0 +1,161 @@
+{
+    "utils": {
+        "stats": {
+            "function": {
+                "stats": {}
+            }
+        },
+        "temp": {
+            "function": {
+                "gettemp": {}
+            }
+        },
+        "speedtest": {
+            "function": {
+                "testspeed": {}
+            }
+        },
+        "big graph": {
+            "function": {
+                "memgraph": {
+                    "args": {
+                        "value": "all"
+                    }
+                }
+            }
+        },
+        "disks graph": {
+            "function": {
+                "diskGraph": {}
+            }
+        },
+        "logwatch": {
+            "function": {
+                "logwatch": {}
+            }
+        },
+        "raid": {
+            "function": {
+                "raidstatus": {}
+            }
+        },
+        "disks" : {
+            "function": {
+                "disks": {}
+            }
+        },
+        "ip": {
+            "function": {
+                "getip": {}
+            }
+        }
+    },
+    "pihole": {
+        "stats": {
+            "function": {
+                "get_summary": {}
+            }
+        },
+        "devices": {
+            "function": {
+                "get_devices": {}
+            }
+        },
+        "update": {
+            "function": {
+                "update_format": {}
+            }
+        },
+        "graph": {
+            "function": {
+                "graph": {}
+            }
+        }
+    },
+    "myWebSite": {
+        "visits": {
+            "waiting values": "Please send a date (Today or YYYY-MM-DD or YYYY-MM)",
+            "function": {
+                "get_visits": {
+                    "args": {
+                        "dateToSearch": {}
+                    }
+                }
+            }
+        },
+        "status": {
+            "function": {
+                "get_status": {}
+            }
+        }
+    },
+    "other": {
+        "restart bot": {
+            "function": {
+                "restartBot": {}
+            }
+        },
+        "compile LineageOS": {
+            "function": {
+                "compile": {}
+            }
+        },
+        "status": {
+            "function": {
+                "compilStatus": {}
+            }
+        },
+        "restart Emby": {
+            "function": {
+                "restartEmby": {}
+            }
+        }
+    },
+    "settings": {
+        "setmem": {
+            "waiting values": "Please send a proper numeric value below 100",
+            "function": {
+                "settingmemth": {
+                    "args": {
+                        "value": {}
+                    }
+                }
+            }
+        },
+        "setcpu": {
+            "waiting values": "Please send a proper numeric value below 100",
+            "function": {
+                "settingcputh": {
+                    "args": {
+                        "value": {}
+                    }
+                }
+            }
+        },
+        "setpoll": {
+            "waiting values": "Please send a proper numeric value >= 10",
+            "function": {
+                "settingpollth": {
+                    "args": {
+                        "value": {}
+                    }
+                }
+            }
+        },
+        "graph length": {
+            "waiting values": "Please send a number of hours below 240",
+            "function": {
+                "setgraphichours": {
+                    "args": {
+                        "value": {}
+                    }
+                }
+            }
+        },
+        "alert on/off": {
+            "function": {
+                "alerts": {}
+            }
+        }
+    }
+}
