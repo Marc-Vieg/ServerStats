@@ -30,55 +30,12 @@ class Routine():
         """
         Here is actions needed to report
         """
-        # Initiate IP surveillance
-        lastIpCheck = round(time())
-        self.botTools.ipCheck('0', lastIpCheck)
-
         if self.botConfig.autoSend:
-            self.botTools.memgraph('all')
+            isOK, result = self.botTools.example()
             for chatId in self.botConfig.adminchatid:
                 self.bot.sendMessage(
                     chat_id=chatId,
-                    text=f"""Survey report all
-                         {str(self.botConfig.poll)} seconds"""
+                    text=f"""Survey report all {str(self.botConfig.poll)} \
+                         seconds\n
+                         It's {result}"""
                 )
-        memck = psutil.virtual_memory()
-        mempercent = memck.percent
-        usagepercent = psutil.cpu_percent(0.5)
-
-        # Maintain list of proc uses
-        temperatures = self.botTools.gettemp(True)
-        z = 0
-        somme = 0
-        for core in self.botConfig.myCores:
-            z += 1
-            somme += temperatures[1][core]
-        tempMoyenne = somme / z
-        self.botData.appendData(usagepercent, mempercent, tempMoyenne)
-
-        # Alert if memory is low
-        if ((mempercent > self.botConfig.memorythreshold)
-           and self.botConfig.sendAlerts):
-            memavail = "Available memory: %.2f GB" \
-                    % (memck.available / 1000000000)
-            for chatId in self.botConfig.adminchatid:
-                self.bot.sendMessage(
-                    chat_id=chatId,
-                    text=f"CRITICAL! LOW MEMORY !\n{memavail}\n \
-                         {str(mempercent)}% of memory used"
-                )
-            self.botTools.memgraph('all')
-
-        # Alert if cpu usage percent is high
-        if ((usagepercent > self.botConfig.usagethreshold)
-           and self.botConfig.sendAlerts):
-            for chatId in self.botConfig.adminchatid:
-                self.bot.sendMessage(
-                    chat_id=chatId,
-                    text=f"CRITICAL! HIGH CPU !\n \
-                         {str(usagepercent)} % of cpu used"
-                )
-            self.botTools.memgraph('all')
-
-        # Check IP adress for those who have dynamic IP
-        self.botTools.ipCheck(self.botConfig.MyIp, lastIpCheck)

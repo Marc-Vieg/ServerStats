@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from configobj import ConfigObj
-from datetime import datetime
 import os
 
 
@@ -15,50 +14,15 @@ class BotConfig:
 
         if not self.exist(self.path):
             self.createConfig()
-            self.setConfig('Graph', 'length', '60')
 
-        self.sendAlerts = False
-        self.autoSend = False
-        self.autoSendTime = 30
-        self.memorythreshold = 60  # If memory usage more this %
-        self.usagethreshold = 70  # If cpu usage is more than this %
+        self.sendAlerts = True
+        self.autoSend = True
+        self.autoSendTime = 1800  # seconds (30min)
         self.poll = 25200  # seconds (7h)
-        self.LISTSMAX = 864000
-        # Hours to show in grap (can be 0.5 to 30 minutes for example)
-        self.GraphicHours = 3 * 3600
-        self.MyIp = '0'
-        self.xaxis = []
-        self.xaxiscpu = []
-        self.xaxistemp = []
-        self.settingmemth = []
-        self.settingcputh = []
-        self.setpolling = []
-        self.graphstart = datetime.now()
-        self.shellexecution = []
-        self.myCores = ['Core 0', 'Core 1']
-
-        # Keyboard
-        self.currentMenu = 'Main'
-
-        # Modules
-        self.isEmbyPresent = False
-        self.isPiholePresent = False
-        self.otherMenu = False
-        self.myWebSiteMenu = True
-        self.webSiteURL = ""
-
-        # Database
-        self.Datas = {
-            'timing': [],
-            'cpu': [],
-            'mem': [],
-            'temp': []
-        }
 
         # Get sensitive data
         self.TOKEN = ""
         self.adminchatid = []
-        self.pihole_passwd = ""
 
         if self.exist(os.path.dirname(os.path.realpath(__file__))
                       + os.sep
@@ -66,47 +30,20 @@ class BotConfig:
             import tokens
             self.TOKEN = tokens.telegrambot
             self.adminchatid = tokens.adminchatid
-            self.pihole_passwd = tokens.pihole_passwd
 
     def loadSettings(self):
         # load settings from file to replace default values in MyGlobals
         isRead, sendAlerts = self._getConfig('Alerts', 'sendAlerts', 'bool')
-        self.sendAlerts = sendAlerts if isRead else False
+        self.sendAlerts = sendAlerts if isRead else True
 
         isRead, autoSend = self._getConfig('Alerts', 'autoSend', 'bool')
-        self.autoSend = autoSend if isRead else False
+        self.autoSend = autoSend if isRead else True
 
         isRead, autoSendTime = self._getConfig('Alerts', 'autoSendTime', 'int')
-        self.autoSendTime = autoSendTime if isRead else 30
-
-        isRead, memorythreshold = self._getConfig('Graph', 'memth', 'int')
-        self.memorythreshold = memorythreshold if isRead else 60
-
-        isRead, usagethreshold = self._getConfig('Graph', 'cputh', 'int')
-        self.usagethreshold = usagethreshold if isRead else 70
-
-        isRead, GraphicHours = self._getConfig('Graph', 'length', 'int')
-        self.GraphicHours = GraphicHours if isRead else 3 * 3600
+        self.autoSendTime = autoSendTime if isRead else 1800
 
         isRead, poll = self._getConfig('Bot', 'poll', 'int')
-        self.poll = poll if isRead else 10
-
-        isRead, isEmbyPresent = self._getConfig('Bot', 'isEmbyPresent', 'bool')
-        self.isEmbyPresent = isEmbyPresent if isRead else False
-
-        isRead, isPiholePresent = self._getConfig('Bot',
-                                                  'isPiholePresent',
-                                                  'bool')
-        self.isPiholePresent = isPiholePresent if isRead else False
-
-        isRead, otherMenu = self._getConfig('Bot', 'otherMenu', 'bool')
-        self.otherMenu = otherMenu if isRead else False
-
-        isRead, myWebSiteMenu = self._getConfig('Bot', 'myWebSiteMenu', 'bool')
-        self.myWebSiteMenu = myWebSiteMenu if isRead else False
-
-        isRead, webSiteURL = self._getConfig('Bot', 'webSiteURL', 'str')
-        self.webSiteURL = webSiteURL if isRead else False
+        self.poll = poll if isRead else 25200
 
     def _getConfig(self, section, option, type):
         try:
@@ -124,14 +61,7 @@ class BotConfig:
         config = ConfigObj(self.path)
         config[section][option] = value
 
-        if section == 'Graph':
-            if option == 'length':
-                self.GraphicHours = value
-            elif option == 'cputh':
-                self.usagethreshold = value
-            elif option == 'memth':
-                self.memorythreshold = value
-        elif section == 'Alerts':
+        if section == 'Alerts':
             if option == 'sendAlerts':
                 self.sendAlerts = value
             elif option == 'autoSendTime':
@@ -141,16 +71,6 @@ class BotConfig:
         elif section == 'Bot':
             if option == 'poll':
                 self.poll = value
-            elif option == 'isEmbyPresent':
-                self.isEmbyPresent = value
-            elif option == 'isPiholePresent':
-                self.isPiholePresent = value
-            elif option == 'otherMenu':
-                self.otherMenu = value
-            elif option == 'myWebSite':
-                self.myWebSiteMenu = value
-            elif option == 'webSiteURL':
-                self.webSiteURL = value
 
         try:
             config.write()
@@ -166,29 +86,22 @@ class BotConfig:
         """
         config = ConfigObj(self.path)
 
-        config['Graph'] = {
-            'length': 12,
-            'cputh': 90,
-            'memth': 90
-        }
         config['Alerts'] = {
             'sendAlerts': 1,
-            'autoSend': 0,
-            'autoSendTime': 30
+            'autoSend': 1,
+            'autoSendTime': 1800
         }
         config['Bot'] = {
-            'poll': 10,
-            'isEmbyPresent': 0,
-            'isPiholePresent': 0,
-            'otherMenu': 0,
-            'myWebSiteMenu': 0,
-            'webSiteURL': ""
+            'poll': 25200,
         }
 
         try:
             config.write()
         except Exception:
             print("Something went wrong while creating the settings file")
+
+    def isAuthorizedId(self, chat_id):
+        return chat_id in self.adminchatid
 
     def getKeyboard(self, itemsList=[], addBackTouch=True):
         """
@@ -207,14 +120,3 @@ class BotConfig:
         else:
             keyboard = []
         return keyboard
-
-    def isAuthorizedId(self, chat_id):
-        return chat_id in self.adminchatid
-
-    def clearall(self, chat_id):
-        if chat_id in self.shellexecution:
-            self.shellexecution.remove(chat_id)
-        if chat_id in self.settingmemth:
-            self.settingmemth.remove(chat_id)
-        if chat_id in self.setpolling:
-            self.setpolling.remove(chat_id)
