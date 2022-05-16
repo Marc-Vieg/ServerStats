@@ -37,24 +37,6 @@ class BotConfig:
         self.shellexecution = []
         self.myCores = ['Core 0', 'Core 1']
 
-        # Keyboard
-        self.currentMenu = 'Main'
-
-        # Modules
-        self.isEmbyPresent = False
-        self.isPiholePresent = False
-        self.otherMenu = False
-        self.myWebSiteMenu = True
-        self.webSiteURL = ""
-
-        # Database
-        self.Datas = {
-            'timing': [],
-            'cpu': [],
-            'mem': [],
-            'temp': []
-        }
-
         # Get sensitive data
         self.TOKEN = ""
         self.adminchatid = []
@@ -91,23 +73,6 @@ class BotConfig:
         isRead, poll = self._getConfig('Bot', 'poll', 'int')
         self.poll = poll if isRead else 10
 
-        isRead, isEmbyPresent = self._getConfig('Bot', 'isEmbyPresent', 'bool')
-        self.isEmbyPresent = isEmbyPresent if isRead else False
-
-        isRead, isPiholePresent = self._getConfig('Bot',
-                                                  'isPiholePresent',
-                                                  'bool')
-        self.isPiholePresent = isPiholePresent if isRead else False
-
-        isRead, otherMenu = self._getConfig('Bot', 'otherMenu', 'bool')
-        self.otherMenu = otherMenu if isRead else False
-
-        isRead, myWebSiteMenu = self._getConfig('Bot', 'myWebSiteMenu', 'bool')
-        self.myWebSiteMenu = myWebSiteMenu if isRead else False
-
-        isRead, webSiteURL = self._getConfig('Bot', 'webSiteURL', 'str')
-        self.webSiteURL = webSiteURL if isRead else False
-
     def _getConfig(self, section, option, type):
         try:
             config = ConfigObj(self.path)
@@ -141,16 +106,6 @@ class BotConfig:
         elif section == 'Bot':
             if option == 'poll':
                 self.poll = value
-            elif option == 'isEmbyPresent':
-                self.isEmbyPresent = value
-            elif option == 'isPiholePresent':
-                self.isPiholePresent = value
-            elif option == 'otherMenu':
-                self.otherMenu = value
-            elif option == 'myWebSite':
-                self.myWebSiteMenu = value
-            elif option == 'webSiteURL':
-                self.webSiteURL = value
 
         try:
             config.write()
@@ -174,10 +129,10 @@ class BotConfig:
         config['Alerts'] = {
             'sendAlerts': 1,
             'autoSend': 0,
-            'autoSendTime': 30
+            'autoSendTime': 1800
         }
         config['Bot'] = {
-            'poll': 10,
+            'poll': 25200,
             'isEmbyPresent': 0,
             'isPiholePresent': 0,
             'otherMenu': 0,

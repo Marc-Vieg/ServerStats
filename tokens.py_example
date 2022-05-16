@@ -4,5 +4,5 @@ telegrambot = '9999999:6666aaaaaa666666a6aaa'
 # A chat_id of your client
 adminchatid = [99999999]
 
-#your pihole web ui password
+# Your pihole web ui password
 pihole_passwd = '*****'

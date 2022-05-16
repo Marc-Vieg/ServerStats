@@ -83,7 +83,7 @@
                 }
             }
         },
-        "status": {
+        "is online": {
             "function": {
                 "get_status": {}
             }

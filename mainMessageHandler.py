@@ -24,15 +24,61 @@ class MainMessageHandler(telepot.aio.helper.ChatHandler):
         self.msgToSend, self.nextFunctionToCall = "", ""
 
     async def on_chat_message(self, msg):
-        if self.botConfig.currentMenu == 'Main':
-            content_type, chat_type, chat_id = telepot.glance(msg)
-            self.isPictureToSend = False
+        content_type, chat_type, chat_id = telepot.glance(msg)
+        self.isPictureToSend = False
 
-            # Text messages
-            if (content_type == 'text'
-               and self.botConfig.isAuthorizedId(chat_id)):
-                # Enter main menu
-                if msg['text'] == "/start":
+        # Text messages
+        if (content_type == 'text'
+           and self.botConfig.isAuthorizedId(chat_id)):
+            # Enter main menu
+            if msg['text'] == "/start":
+                self.msgToSend = "Welcome on board with MonitoBot\r \
+                    What can I do for you ?"
+                self.getMenu(self.jsonConfig)
+                self.keyboardToSend = self.botConfig.getKeyboard(
+                    self.actualMenu,
+                    addBackTouch=False
+                )
+
+            if self.nextFunctionToCall:
+                isOK, result = self.getFunction(
+                    self.nextFunctionToCall,
+                    msg['text']
+                )
+
+                if isinstance(result, tuple):
+                    self.msgToSend, self.isPictureToSend = result
+
+                if isinstance(result, str):
+                    self.msgToSend = result
+
+                if isOK:
+                    self.nextFunctionToCall = ""
+
+            else:
+                if msg['text'] in self.actualMenu:
+                    if msg['text'] == "<- back":
+                        needBackOption = not (self.actualSelection
+                                              in self.jsonConfig.keys())
+                        self.getMenu(
+                            self.jsonConfig,
+                            back=True
+                        )
+                        self.msgToSend = "back"
+                        self.keyboardToSend = self.botConfig.getKeyboard(
+                            self.actualMenu,
+                            needBackOption
+                        )
+                    else:
+                        self.msgToSend = f"{msg['text']} menu"
+                        self.getMenu(
+                            self.jsonConfig,
+                            msg['text']
+                        )
+                        self.keyboardToSend = self.botConfig.getKeyboard(
+                            self.actualMenu
+                        )
+                else:
                     self.msgToSend = "Welcome on board with MonitoBot\r \
                         What can I do for you ?"
                     self.getMenu(self.jsonConfig)
@@ -41,65 +87,18 @@ class MainMessageHandler(telepot.aio.helper.ChatHandler):
                         addBackTouch=False
                     )
 
-                if self.nextFunctionToCall:
-                    isOK, result = self.getFunction(
-                        self.nextFunctionToCall,
-                        msg['text']
-                    )
-
-                    if isinstance(result, tuple):
-                        self.msgToSend, self.isPictureToSend = result
-
-                    if isinstance(result, str):
-                        self.msgToSend = result
-
-                    if isOK:
-                        self.nextFunctionToCall = ""
-
+            if self.msgToSend:
+                if self.isPictureToSend:
+                    self.isPictureToSend = False
+                    await self.sender.sendPhoto(self.msgToSend)
                 else:
-                    if msg['text'] in self.actualMenu:
-                        if msg['text'] == "<- back":
-                            needBackOption = not (self.actualSelection
-                                                  in self.jsonConfig.keys())
-                            self.getMenu(
-                                self.jsonConfig,
-                                back=True
-                            )
-                            self.msgToSend = "back"
-                            self.keyboardToSend = self.botConfig.getKeyboard(
-                                self.actualMenu,
-                                needBackOption
-                            )
-                        else:
-                            self.msgToSend = f"{msg['text']} menu"
-                            self.getMenu(
-                                self.jsonConfig,
-                                msg['text']
-                            )
-                            self.keyboardToSend = self.botConfig.getKeyboard(
-                                self.actualMenu
-                            )
-                    else:
-                        self.msgToSend = "Welcome on board with MonitoBot\r \
-                            What can I do for you ?"
-                        self.getMenu(self.jsonConfig)
-                        self.keyboardToSend = self.botConfig.getKeyboard(
-                            self.actualMenu,
-                            addBackTouch=False
-                        )
-
-                if self.msgToSend:
-                    if self.isPictureToSend:
-                        self.isPictureToSend = False
-                        await self.sender.sendPhoto(self.msgToSend)
-                    else:
-                        await self.sender.sendMessage(
-                            text=self.msgToSend,
-                            reply_markup=ReplyKeyboardMarkup(
-                                keyboard=self.keyboardToSend
-                            ),
-                            disable_web_page_preview=True
-                        )
+                    await self.sender.sendMessage(
+                        text=self.msgToSend,
+                        reply_markup=ReplyKeyboardMarkup(
+                            keyboard=self.keyboardToSend
+                        ),
+                        disable_web_page_preview=True
+                    )
 
     def initializeHandlers(self):
         """
