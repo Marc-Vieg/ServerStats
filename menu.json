@@ -1,0 +1,33 @@
+{
+    "menu": {
+        "simple action": {
+            "function": {
+                "example1": {}
+            }
+        },
+        "picture action": {
+            "function": {
+                "example2": {}
+            }
+        },
+        "parameter action": {
+            "function": {
+                "example3": {
+                    "args": {
+                        "value": "test"
+                    }
+                }
+            }
+        },
+        "manual param action": {
+            "waiting values": "Please send a proper numeric value below 100",
+            "function": {
+                "example3": {
+                    "args": {
+                        "value": {}
+                    }
+                }
+            }
+        }
+    }   
+}

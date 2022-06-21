@@ -1,77 +1,122 @@
 # -*- coding: utf-8 -*-
+
 from configobj import ConfigObj
-import botglobalvars as MyGlobals
 import os
-import time
 
 
-def loadSettings(path):
-    #load settings from file to replace default values in MyGlobals (temporary)
-    MyGlobals.sendAlerts = getConfig(path, 'Alerts', 'sendAlerts', 'bool')
-    MyGlobals.autoSend = getConfig(path, 'Alerts', 'autoSend', 'bool')
-    MyGlobals.autoSendTime = getConfig(path, 'Alerts', 'autoSendTime', 'int')
-    MyGlobals.memorythreshold = getConfig(path, 'Graph', 'memth', 'int')
-    MyGlobals.usagethreshold = getConfig(path, 'Graph', 'cputh', 'int')
-    MyGlobals.GraphicHours = getConfig(path, 'Graph', 'length', 'int')
-    MyGlobals.poll = getConfig(path, 'Bot', 'poll', 'int')
-    print("settings loaded", MyGlobals.sendAlerts)
-
-
-def setConfig(path, section, option, value):
-    config = ConfigObj(path)
-    config[section][option] = value
-    print(section, option, value, config[section][option])
-    try:
-        config.write()
-    except:
-        print("error writing config file")
-
-
-def exist(path):
-    return os.path.exists(path)
-
-
-def createConfig(path):
+class BotConfig:
     """
-    Create a config file
+    This is an object to define bot configuration
     """
-    config = ConfigObj(path)
-    graphSection = {
-        'length': 12,
-        'cputh': 90,
-        'memth': 90
-    }
-    config['Graph'] = graphSection
+    def __init__(self, path):
+        # Bot informations
+        self.path = path
 
-    alertSection = {
-        'sendAlerts': 1,
-        'autoSend': 0,
-        'autoSendTime': 30
-    }
-    config['Alerts'] = alertSection
-    botSection = {
-        'poll': 10
-    }
-    config['Bot'] = botSection
+        if not self.exist(self.path):
+            self.createConfig()
 
-    config.write()
+        self.sendAlerts = True
+        self.autoSend = True
+        self.autoSendTime = 1800  # seconds (30min)
+        self.poll = 25200  # seconds (7h)
 
+        # Get sensitive data
+        self.TOKEN = ""
+        self.adminchatid = []
 
-def getConfig(path, section, option, type):
-    config = ConfigObj(path)
-    if type == 'str':
-        return config[section][option]
-    elif type == 'int':
-        return config[section].as_int(option)
-    elif type == 'bool':
-        #print('bool : ', section, option, config[section].as_bool(option))
-        result = config[section].as_bool(option)
-        if result:
-            return 1
+        if self.exist(os.path.dirname(os.path.realpath(__file__))
+                      + os.sep
+                      + 'tokens.py'):
+            import tokens
+            self.TOKEN = tokens.telegrambot
+            self.adminchatid = tokens.adminchatid
+
+    def loadSettings(self):
+        # load settings from file to replace default values in MyGlobals
+        isRead, sendAlerts = self._getConfig('Alerts', 'sendAlerts', 'bool')
+        self.sendAlerts = sendAlerts if isRead else True
+
+        isRead, autoSend = self._getConfig('Alerts', 'autoSend', 'bool')
+        self.autoSend = autoSend if isRead else True
+
+        isRead, autoSendTime = self._getConfig('Alerts', 'autoSendTime', 'int')
+        self.autoSendTime = autoSendTime if isRead else 1800
+
+        isRead, poll = self._getConfig('Bot', 'poll', 'int')
+        self.poll = poll if isRead else 25200
+
+    def _getConfig(self, section, option, type):
+        try:
+            config = ConfigObj(self.path)
+            if type == 'str':
+                return True, config[section][option]
+            elif type == 'int':
+                return True, config[section].as_int(option)
+            elif type == 'bool':
+                return True, config[section].as_bool(option)
+        except Exception:
+            return False, None
+
+    def setConfig(self, section, option, value):
+        config = ConfigObj(self.path)
+        config[section][option] = value
+
+        if section == 'Alerts':
+            if option == 'sendAlerts':
+                self.sendAlerts = value
+            elif option == 'autoSendTime':
+                self.autoSendTime = value
+            elif option == 'autoSend':
+                self.autoSend = value
+        elif section == 'Bot':
+            if option == 'poll':
+                self.poll = value
+
+        try:
+            config.write()
+        except Exception:
+            print("Something went wrong while updating the settings file")
+
+    def exist(self, path):
+        return os.path.exists(path)
+
+    def createConfig(self):
+        """
+        Create a config file
+        """
+        config = ConfigObj(self.path)
+
+        config['Alerts'] = {
+            'sendAlerts': 1,
+            'autoSend': 1,
+            'autoSendTime': 1800
+        }
+        config['Bot'] = {
+            'poll': 25200,
+        }
+
+        try:
+            config.write()
+        except Exception:
+            print("Something went wrong while creating the settings file")
+
+    def isAuthorizedId(self, chat_id):
+        return chat_id in self.adminchatid
+
+    def getKeyboard(self, itemsList=[], addBackTouch=True):
+        """
+        This function gives you a specific keyboard
+        """
+        def chunks(lst, n):
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+
+        keyboard = []
+        if itemsList:
+            if addBackTouch and "<- back" not in itemsList:
+                itemsList.append("<- back")
+            for line in chunks(itemsList, 3):
+                keyboard.append(line)
         else:
-            return 0
-
-if __name__ == "__main__":
-    path = "settings.ini"
-    createConfig(path)
-    setConfig(path, 'graph', 'length', '60')
+            keyboard = []
+        return keyboard
